@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+
+    <style>
+        html, body {
+            /* FIXED: Set background to transparent so it naturally matches whatever */
+            /* color your parent page is using, without guessing hex codes! */
+            background-color: transparent; 
+            
+            /* FIXED: Strips the browser's default 8px margin outline that causes the massive white gap */
+            margin: 0;
+            padding: 0;
+            height: 100%; 
+            width: 100%;
+            overflow: hidden; 
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+	
+        /* 1. Master Showcase Frame */
+        .showcase-frame {
+            display: flex;
+            flex-direction: column; 
+            align-items: center;    
+            justify-content: center;
+            
+            /* Adjust this to match your video's layout box ratio (e.g., standard 16/9) */
+            aspect-ratio: 16 / 9; 
+            
+            /* Take up 100% of the iframe space instead of leaving an inner gap */
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            background: transparent;
+            container-type: inline-size; 
+        }
+
+        /* 2. Centered Typography Header */
+        .video-header-block {
+            text-align: center;
+            margin-bottom: 15px; /* Clean spacing buffer above the video */
+            flex-shrink: 0;      
+        }
+
+        .video-title {
+            font-family: 'Montserrat';
+            font-size: clamp(8px, 3.1cqi, 28px);
+            font-weight: bold;
+            color: #2d3436;
+            margin: 0;
+            letter-spacing: 2px;
+            white-space: nowrap; 
+        }
+
+        /* 3. The Video Mounting Wrapper Box */
+        .video-wrapper-box {
+            width: 100%;
+            flex-grow: 1; 
+            min-height: 0; 
+            position: relative;
+            
+            /* FIXED: Completely deleted the box-shadow, border-radius, and border outlines */
+            /* that were creating the visible divider seams between your text and video canvas! */
+            border: none;
+            outline: none;
+            box-shadow: none;
+            border-radius: 0;
+            overflow: hidden;
+            background: transparent; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="showcase-frame">
+        
+        <header class="video-header-block">
+            <h1 class="video-title">Welcome! Please Explore the Choices Above!</h1>
+        </header>
+
+        <!-- Pure fluid container passing coordinates to your script engine -->
+        <div id="video_wrapper" class="video-wrapper-box"></div>
+
+    </div>
+
+    <script src="video_formatted.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            new formatted_video(
+                "video_wrapper",       
+                "./welcome_video.mp4", 
+                0, 0, 0, 0,            
+                15,                    
+                true                   
+            );
+        });
+    </script>
+
+</body>
+</html>

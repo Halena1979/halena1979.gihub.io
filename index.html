@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <title>Originals by Halena</title>
+
+    <style>
+        html, body {
+            background-color: #D1D1D1;
+            margin: 0;
+            padding: 0;
+            height: 100%; 
+            width: 100%;
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+	
+        /* This container forces itself to sit EXACTLY where the image canvas sits, no matter the ratio */
+        .page-wrapper {
+            position: relative;
+            aspect-ratio: 960 / 750;
+            width: 100vw;
+            height: 100vh;
+            max-width: calc(100vh * (960 / 750));
+            max-height: calc(100vw * (750 / 960));
+            
+        }
+
+        .responsive-img {
+            position:absolute;
+            top:0;
+            left:0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            will-change: transform;
+            content-visibility: auto; 
+        }
+
+        .iframe-container {
+            /* Adjust these values to fit the whitespace box in your graphic */
+            width: 60%; 
+            height: 65%;
+            
+            position: absolute;
+            top: 53%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            
+            z-index: 10; 
+            overflow: hidden;
+            border: none;
+            outline: none;
+            box-shadow: none;
+            border-radius: 0;
+            background: transparent; 
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none; 
+            background: transparent; 
+        }
+
+        #dropdown-anchor {
+            position: absolute;
+            /* Adjust these percentages smoothly to put the container box */
+            /* exactly over the menu area of your background graphic */
+            top: 11%; 
+            left: 21.5%;
+            transform: translate(-50%, -50%);
+            
+            width: 26%;  
+            height: 5%; 
+            z-index: 20;   /* Sits safely over your image asset layer */
+            container-type: inline-size; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper" id="page-wrapper1">
+        <div id="dropdown-anchor"></div>
+        <!-- The layout engine now reads this image file's natural boundaries directly -->
+        <img src="main_background.svg" id="background_image" class="responsive-img" alt="Background" decoding="async" />
+
+        <div class="iframe-container">
+            <iframe src="welcome_video.html" name="content-frame" id="main_frame"></iframe>
+        </div>
+
+    </div>
+
+    <script src="./image_dropdown.js"></script>
+    
+    <script>
+        // Use a standard event listener to initialize the configuration matrix
+        window.addEventListener('DOMContentLoaded', () => {
+            
+
+            // Easily modify or expand your page menu choices here:
+            const pageMenuConfig = [
+                { title: "About Me",  filename: "./about_me.html" },
+                { title: "Pet Portraits", filename: "./pet_portraits.html" },
+                { title: "Ink Drawings",  filename: "./ink_drawings.html" }//,
+              //  { title: "Contact Info",  filename: "./contact.html" }
+            ];
+
+            // Instantiate your image background switcher dropdown menu object
+            new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
+        });
+    </script>
+
+</body>
+</html>

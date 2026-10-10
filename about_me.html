@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reference Specific Class</title>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden; 
+        background-color: #D1D1D1;}
+</style>
+</head>
+<body>
+
+    <div id="slideshow" ></div>
+
+    <script type="module" >
+        import {ImageAnimator} from './image_animator.js';
+        const client = new ImageAnimator('slideshow', 2, 5, 1, false);
+	    //alert("script is running")
+	    client.images = ['./images_about_me/aboutme_1.svg', 
+                        './images_about_me/aboutme_2.svg' , 
+                        './images_about_me/aboutme_3.svg', 
+                        './images_about_me/aboutme_4.svg', 
+                        './images_about_me/aboutme_5.svg' ]
+    </script>
+    
+</body>
+</html>
