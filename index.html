@@ -19,20 +19,32 @@
         .page-wrapper {
             position: relative;
             width: 100vw;
-            min-height: 100vh;
-            min-height: 100dvh; /* dvh protects mobile viewports from collapsing under changing UI address bars */
+            min-height: 100dvh; /* dvh locks the viewport size on mobile phones */
             
-            /* Call your SVG background path directly */
-            background-image: url('main_background.png'); 
+            /* Load your vertical mobile graphic variant here */
+            background-image: url('main_background_narrow.png'); 
             
-            /* Native aspect-ratio calculations */
-            background-size: contain;      /* Computes the 1.28 scaling logic perfectly */
-            background-position: center;  /* Keeps your focal midpoint locked in place */
+            background-size: cover;      /* Scales seamlessly to fill smartphone frames */
+            background-position: center;  /* Anchors the center of the graphic */
             background-repeat: no-repeat;
-            background-color:transparent;
+            
+            /* Flexbox layout to align elements easily */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centers elements vertically */
+            align-items: center;     /* Centers elements horizontally */
             
             will-change: transform;
-            
+        }
+
+        /* --- 2. DESKTOP VIEW CHANGES (Screens wider than 768px) --- */
+        @media (min-width: 768px) {
+            .page-wrapper {
+                /* Automatically swap out the mobile asset for your 1920x1080 landscape asset */
+                background-image: url('main_background_wide.png'); 
+                
+                background-size: cover; /* Perfectly maps 16:9 screens without noticeable cuts */
+            }
         }
 
         .responsive-img {
