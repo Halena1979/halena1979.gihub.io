@@ -22,11 +22,18 @@
         /* This container forces itself to sit EXACTLY where the image canvas sits, no matter the ratio */
         .page-wrapper {
             position: relative;
-            aspect-ratio: 960 / 750;
-            width: 100vw;
-            height: 100vh;
-            max-width: calc(100vh * (960 / 750));
-            max-height: calc(100vw * (750 / 960));
+            width: 100%;
+            min-height: 100dvh; /* dvh protects mobile viewports from collapsing under changing UI address bars */
+            
+            /* Call your SVG background path directly */
+            background-image: url('images/background.svg'); 
+            
+            /* Native aspect-ratio calculations */
+            background-size: cover;      /* Computes the 1.28 scaling logic perfectly */
+            background-position: center;  /* Keeps your focal midpoint locked in place */
+            background-repeat: no-repeat;
+            
+            will-change: transform;
             
         }
 
