@@ -86,9 +86,9 @@
             left: 50%;
             
             /* --- TUNING: MOBILE PORTRAIT NARROW IFRAME --- */
-            top: 50%;          /* 👈 LOWERED: Pulled up from 52.5% to lift off the bottom */
-            width: 92%;        /* 👈 INCREASED: Widened from 86% to expand into side room */
-            height: 68%;       /* 👈 DECREASED: Shrunk from 72% to prevent bottom overlap */
+            top: 45%;          /* 👈 ADJUSTED: Shifted up from 50% to expand upward */
+            width: 96%;        /* 👈 ADJUSTED: Stretched from 92% to capture side space */
+            height: 74%;       /* 👈 ADJUSTED: Increased from 68% to fill total vertical window space */
         }
 
         /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only)
@@ -104,9 +104,9 @@
 
             .iframe-container {
                 /* --- TUNING: MOBILE LANDSCAPE WIDE IFRAME --- */
-                top: 52%;          /* 👈 LOWERED: Pulled up from 55.5% to lift off the bottom */
-                width: 90%;        /* 👈 INCREASED: Widened from 82% to expand into side room */
-                height: 58%;       /* 👈 DECREASED: Shrunk from 64% to prevent bottom overlap */
+                top: 49.5%;        /* 👈 ADJUSTED: Lifted up from 52% to pull away from the bottom border */
+                width: 90%;        
+                height: 54%;       /* 👈 ADJUSTED: Decreased from 58% to safely remove bottom overlap */
             }
         }
 
@@ -123,9 +123,9 @@
 
             .iframe-container {
                 /* --- TUNING: DESKTOP WIDESCREEN IFRAME --- */
-                top: 51.5%;        /* 👈 LOWERED: Pulled up from 55% to lift off the bottom */
-                width: 88%;        /* 👈 INCREASED: Widened from 80% to expand into side room */
-                height: 60%;       /* 👈 DECREASED: Shrunk from 66% to prevent bottom overlap */
+                top: 48%;          /* 👈 ADJUSTED: Shifted up from 51.5% to fill upper space */
+                width: 88%;        
+                height: 65%;       /* 👈 ADJUSTED: Increased from 60% to expand total height size */
             }
         }
 
@@ -142,7 +142,7 @@
 
     <div class="page-wrapper" id="page-wrapper1">
         
-        <!-- The Locked Aspect Canvas Box -->
+        <!-- The Locked Aspect Canvas Block -->
         <div class="artwork-canvas">
             
             <!-- Dynamic img tag handles rendering natively across all viewports -->
