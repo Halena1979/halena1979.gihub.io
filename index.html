@@ -90,7 +90,6 @@
             width: 26%;  
             height: 5%; 
             
-            /* FIX: Prevents text from being squished or auto-wrapping inside absolute layouts */
             container-type: inline-size;
             white-space: nowrap;
         }
@@ -113,7 +112,7 @@
                 background-image: none !important; 
                 left: 15.5%;  /* Center point over the landscape black menu box */
                 top: 11.5%;   
-                width: 32%;   /* Widened slightly to give choice strings side padding */
+                width: 32%;   
                 height: 6%; 
             }
 
@@ -130,7 +129,7 @@
                 background-image: none !important; 
                 left: 13.5%;  /* Center point over the widescreen desktop menu box */
                 top: 10.5%;    
-                width: 30%;   /* Widened slightly to give choice strings side padding */
+                width: 30%;   
                 height: 6%; 
             }
 
@@ -154,6 +153,24 @@
             background-color: #ffffff !important;
             color: #000000 !important;
             font-weight: normal !important;
+        }
+
+        /* ========================================================
+           FIX: THE BULLETPROOF LAYOUT INTERCEPTOR OVERRIDES
+           Forces the text element overlay and invisible click area 
+           created by your script to stick exactly inside the anchor box 
+           instead of flying to the center of the viewport window
+           ======================================================== */
+        #dropdown-anchor > div,
+        #dropdown-anchor > select {
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
     </style>
 </head>
