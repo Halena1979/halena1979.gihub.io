@@ -12,57 +12,50 @@
             margin: 0;
             padding: 0;
             height: 100%; 
-            overflow-x: hidden; 
+            width: 100%;
+            overflow: hidden; /* Prevents scrollbars when rotating mobile screens */
         }
 	
-        /* This container forces itself to sit EXACTLY where the image canvas sits, no matter the ratio */
+        /* 1. This outer wrapper fills the screen and keeps the inner artwork perfectly centered */
         .page-wrapper {
             position: relative;
             width: 100vw;
-            min-height: 100dvh; /* dvh locks the viewport size on mobile phones */
-            
-            /* Load your vertical mobile graphic variant here */
-            background-image: url('main_background_narrow.png'); 
-            
-            background-size: cover;      /* Scales seamlessly to fill smartphone frames */
-            background-position: center;  /* Anchors the center of the graphic */
-            background-repeat: no-repeat;
-            
-            /* Flexbox layout to align elements easily */
+            height: 100vh;
+            height: 100dvh; 
             display: flex;
-            flex-direction: column;
-            justify-content: center; /* Centers elements vertically */
-            align-items: center;     /* Centers elements horizontally */
-            
-            will-change: transform;
+            justify-content: center;
+            align-items: center;
+            background-color: #D1D1D1;
         }
 
-        /* --- 2. DESKTOP VIEW CHANGES (Screens wider than 768px) --- */
-        @media (min-width: 768px) {
-            .page-wrapper {
-                /* Automatically swap out the mobile asset for your 1920x1080 landscape asset */
+        /* 2. NEW FIXED BOUNDARY LAYER: This box matches your narrow image aspect ratio perfectly */
+        .artwork-canvas {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 1080 / 1920; /* Matches your mobile narrow graphic proportions */
+            
+            background-image: url('main_background_narrow.png'); 
+            background-size: contain;      
+            background-position: center;  
+            background-repeat: no-repeat;
+            background-color: transparent;
+        }
+
+        /* 3. DESKTOP VIEW CHANGES: Flips aspect ratio and background image when screen gets wide */
+        @media (min-width: 768px), screen and (orientation: landscape) {
+            .artwork-canvas {
+                aspect-ratio: 1920 / 1080; /* Matches your desktop wide graphic proportions */
                 background-image: url('main_background_wide.png'); 
-                
-                background-size: cover; /* Perfectly maps 16:9 screens without noticeable cuts */
+                background-size: contain; 
+                background-position: center;
+                background-repeat: no-repeat;
             }
         }
 
-        .responsive-img {
-            position:absolute;
-            top:0;
-            left:0;
-            width: 100vw;
-            height: 100dvh;
-            min-width:100%;
-            min-height:100%;
-            display: block;
-            object-fit: cover;
-            will-change: transform;
-            content-visibility: auto; 
-        }
+        /* All absolute elements below are now locked strictly to the image edges instead of the screen monitor */
 
         .iframe-container {
-            /* Adjust these values to fit the whitespace box in your graphic */
             width: 60%; 
             height: 65%;
             
@@ -89,15 +82,13 @@
 
         #dropdown-anchor {
             position: absolute;
-            /* Adjust these percentages smoothly to put the container box */
-            /* exactly over the menu area of your background graphic */
             top: 11%; 
             left: 21.5%;
             transform: translate(-50%, -50%);
             
             width: 26%;  
             height: 5%; 
-            z-index: 20;   /* Sits safely over your image asset layer */
+            z-index: 20;   
             container-type: inline-size; 
         }
     </style>
@@ -105,11 +96,14 @@
 <body>
 
     <div class="page-wrapper" id="page-wrapper1">
-        <div id="dropdown-anchor"></div>
-        <!-- The layout engine now reads this image file's natural boundaries directly -->
-  
-        <div class="iframe-container">
-            <iframe src="welcome_video.html" name="content-frame" id="main_frame"></iframe>
+        
+        <!-- FIX: This wrapper captures your elements and locks them to the background scaling coordinates -->
+        <div class="artwork-canvas">
+            <div id="dropdown-anchor"></div>
+      
+            <div class="iframe-container">
+                <iframe src="welcome_video.html" name="content-frame" id="main_frame"></iframe>
+            </div>
         </div>
 
     </div>
@@ -117,19 +111,13 @@
     <script src="./image_dropdown.js"></script>
     
     <script>
-        // Use a standard event listener to initialize the configuration matrix
         window.addEventListener('DOMContentLoaded', () => {
-            
-
-            // Easily modify or expand your page menu choices here:
             const pageMenuConfig = [
                 { title: "About Me",  filename: "./about_me.html" },
                 { title: "Pet Portraits", filename: "./pet_portraits.html" },
-                { title: "Ink Drawings",  filename: "./ink_drawings.html" }//,
-              //  { title: "Contact Info",  filename: "./contact.html" }
+                { title: "Ink Drawings",  filename: "./ink_drawings.html" }
             ];
 
-            // Instantiate your image background switcher dropdown menu object
             new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>
