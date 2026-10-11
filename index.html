@@ -43,16 +43,19 @@
             display: block;
             max-width: 100%;
             max-height: 100%;
+            
+            /* FIX: Default narrow aspect ratio logic locks the absolute bounds mapping safely */
+            aspect-ratio: 1080 / 1920;
         }
 
-        /* 3. The true background graphic layer */
+        /* 3. The true background graphic layer player engine setup */
         .canvas-bg-img {
-            position: relative; 
-            display: block;
-            width: auto;
-            height: auto;
-            max-width: 100%;
-            max-height: 100%;
+            position: absolute; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: fill; /* Fills our aspect container box perfectly with zero trailing edges */
             z-index: 1;
             
             /* DEFAULT NARROW ARTWORK FOR MOBILE PORTRAIT */
@@ -61,6 +64,10 @@
 
         /* BULLETPROOF SYNCHRONIZED BREAKPOINT SWAP */
         @media (min-width: 901px), screen and (orientation: landscape) {
+            .artwork-canvas {
+                /* Flip the bounding aspect frame to match the desktop widescreen dimensions */
+                aspect-ratio: 1920 / 1080;
+            }
             .canvas-bg-img {
                 content: url('main_background_wide.png');
             }
@@ -144,15 +151,6 @@
             color: #000000 !important;
             font-weight: normal !important;
         }
-
-        /* Keep the hidden script-triggering tracking node transparent */
-        .script-spacer-node {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-            pointer-events: none;
-        }
     </style>
 </head>
 <body>
@@ -165,10 +163,7 @@
             <!-- Background element graphic loads its responsive files using pure CSS rules now -->
             <img id="bg-image-element" class="canvas-bg-img" alt="Background">
 
-            <div id="dropdown-anchor">
-                <!-- FIX: Transparent 1px image satisfies the script module's querySelector criteria -->
-                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class="script-spacer-node" alt="">
-            </div>
+            <div id="dropdown-anchor"></div>
       
             <div class="iframe-container">
                 <iframe src="welcome_video.html" name="content-frame" id="main_frame"></iframe>
@@ -189,8 +184,8 @@
                 { title: "Ink Drawings",  filename: "./ink_drawings.html" }
             ];
 
-            // Instantiates your unchanged script module with its original 0,0 offsets
-            new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
+            // Instantiates your newly optimized shared script module configuration parameter
+            new ImageDropdown('dropdown-anchor', 'main_frame', 'bg-image-element', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>
 
