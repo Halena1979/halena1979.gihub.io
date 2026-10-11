@@ -44,7 +44,7 @@
             max-width: 100%;
             max-height: 100%;
             
-            /* FIX: Default narrow aspect ratio logic locks the absolute bounds mapping safely */
+            /* Default narrow aspect ratio logic locks the absolute bounds mapping safely */
             aspect-ratio: 1080 / 1920;
         }
 
@@ -173,7 +173,7 @@
 
     </div>
 
-    <!-- Dropdown Core Engine Script Link -->
+    <!-- CLEAN MODULE COUPLING LAYER LINK -->
     <script src="image_dropdown.js"></script>
     
     <script>
@@ -184,8 +184,10 @@
                 { title: "Ink Drawings",  filename: "./ink_drawings.html" }
             ];
 
-            // Instantiates your newly optimized shared script module configuration parameter
-            new ImageDropdown('dropdown-anchor', 'main_frame', 'bg-image-element', pageMenuConfig, 'Choose a Page...',  0, 0 );
+            // Instantiates your separate external javascript object cleanly using the modified image parameters
+            if (typeof ImageDropdown !== 'undefined') {
+                new ImageDropdown('dropdown-anchor', 'main_frame', 'bg-image-element', pageMenuConfig, 'Choose a Page...',  0, 0 );
+            }
         });
     </script>
 
