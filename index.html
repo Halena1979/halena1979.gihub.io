@@ -16,7 +16,7 @@
             overflow: hidden; /* Stops mobile layouts from jumping during window flips */
         }
 	
-        /* 1. The outer screen frame centers our locked canvas box in the window */
+        /* 1. This wrapper fills the screen, introduces a 30px padding margin, and centers our canvas */
         .page-wrapper {
             position: relative;
             width: 100vw;
@@ -26,17 +26,21 @@
             justify-content: center;
             align-items: center;
             background-color: #D1D1D1;
+            
+            /* FIX 1: Creates a clean 30px gap around the image container, showing the grey color */
+            padding: 30px; 
+            box-sizing: border-box; 
         }
 
-        /* 2. THE CANVAS: A structural element that mimics your graphic canvas dimensions perfectly */
+        /* 2. THE CANVAS: Constrained to its aspect ratio boundaries so it can never distort */
         .artwork-canvas {
             position: relative;
-            /* Scale fluidly until it hits the max boundaries of the user screen */
-            width: 100%;
-            height: 100%;
-            max-width: 100vw;
-            max-height: 100vh;
-            max-height: 100dvh;
+            
+            /* FIX 2: Prevents stretching/distortion by letting dimensions adapt to max limits */
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
             
             /* DEFAULT NARROW ASPECT: Forces the parent container to map your mobile shape */
             aspect-ratio: 1080 / 1920; 
@@ -86,9 +90,9 @@
             left: 50%;
             
             /* --- FINAL MAXIMUM TUNING: MOBILE PORTRAIT NARROW IFRAME --- */
-            top: 48%;          /* 👈 ADJUSTED: Pushed center point down to balance the large height boost */
-            width: 98%;        /* 👈 MAXIMIZED: Expanded horizontally to fill extra side padding */
-            height: 84%;       /* 👈 MAXIMIZED: Increased from 74% to aggressively consume top/bottom gaps */
+            top: 48%;          
+            width: 98%;        
+            height: 84%;       
         }
 
         /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only)
@@ -104,9 +108,9 @@
 
             .iframe-container {
                 /* --- FINAL MAXIMUM TUNING: MOBILE LANDSCAPE WIDE IFRAME --- */
-                top: 51.5%;        /* 👈 ADJUSTED: Shifted up slightly to close the upper text gap */
-                width: 92%;        /* 👈 MAXIMIZED: Slight increase to safely expand wide margins */
-                height: 58%;       /* 👈 MAXIMIZED: Increased from 54% to consume leftover vertical space */
+                top: 51.5%;        
+                width: 92%;        
+                height: 58%;       
             }
         }
 
@@ -123,9 +127,9 @@
 
             .iframe-container {
                 /* --- FINAL MAXIMUM TUNING: DESKTOP WIDESCREEN IFRAME --- */
-                top: 49.5%;        /* 👈 ADJUSTED: Shifted slightly upward to fill the "Welcome!" text gap */
-                width: 90%;        /* 👈 MAXIMIZED: Slight increase to utilize extra side buffer space */
-                height: 69%;       /* 👈 MAXIMIZED: Stretched from 65% to completely fill top-to-bottom boundaries */
+                top: 49.5%;        
+                width: 90%;        
+                height: 69%;       
             }
         }
 
