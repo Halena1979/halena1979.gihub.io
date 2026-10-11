@@ -22,11 +22,11 @@
         /* This container forces itself to sit EXACTLY where the image canvas sits, no matter the ratio */
         .page-wrapper {
             position: relative;
-            width: 100%;
+            width: 100vw;
             min-height: 100dvh; /* dvh protects mobile viewports from collapsing under changing UI address bars */
             
             /* Call your SVG background path directly */
-            background-image: url('./main_background.svg'); 
+            background-image: url('../main_background.svg'); 
             
             /* Native aspect-ratio calculations */
             background-size: cover;      /* Computes the 1.28 scaling logic perfectly */
