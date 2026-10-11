@@ -45,7 +45,7 @@
             max-height: 100%;
         }
 
-        /* 3. The true background graphic player engine setup */
+        /* 3. The true background graphic layer */
         .canvas-bg-img {
             position: relative; 
             display: block;
@@ -68,18 +68,18 @@
 
         /* ========================================================
            COORDINATE GRID TUNING KEYS
-           FIXED: Removed 'transform: translate' entirely to stop 
-           clashing with the script's internal positioning formulas.
+           All percentages below track the raw image bounds natively
            ======================================================== */
 
         /* 1. DEFAULT MOBILE NARROW VIEW (Portrait Phone) */
         #dropdown-anchor {
             position: absolute;
-            z-index: 100; /* High z-index forces the text layers safely above the background image */
+            z-index: 100; /* Keeps dropdown layers positioned safely ABOVE the background image */  
+            transform: translate(-50%, -50%);
             
-            /* Pin the TOP-LEFT corner of the box over your mobile black menu rectangle */
-            top: 9.0%; 
-            left: 8.5%;
+            /* Pin the center point directly over the mobile black menu rectangle */
+            top: 11.5%; 
+            left: 21.5%;
             width: 26%;  
             height: 5%; 
         }
@@ -90,7 +90,7 @@
             transform: translate(-50%, -50%);
             left: 50%;
             
-            /* Aligned to clear the bottom border lines cleanly */
+            /* Pushes up safely to clear your portrait bottom border lines */
             top: 48.5%;          
             width: 98%;        
             height: 84%;       
@@ -99,9 +99,9 @@
         /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only) */
         @media screen and (orientation: landscape) and (max-width: 900px) {
             #dropdown-anchor {
-                /* Pin the TOP-LEFT corner over your horizontal mobile black rectangle */
-                top: 7.5%;     
-                left: -0.5%;   
+                background-image: none !important; 
+                left: 15.5%;  /* Center point over the landscape black menu box */
+                top: 11.5%;   
                 width: 32%;   
                 height: 6%; 
             }
@@ -116,9 +116,9 @@
         /* 3. TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets) */
         @media screen and (min-width: 901px) {
             #dropdown-anchor {
-                /* Pin the TOP-LEFT corner over your desktop widescreen black rectangle */
-                top: 7.5%;     
-                left: -1.5%;   
+                background-image: none !important; 
+                left: 13.5%;  /* Center point over the widescreen desktop menu box */
+                top: 10.5%;    
                 width: 30%;   
                 height: 6%; 
             }
@@ -144,6 +144,15 @@
             color: #000000 !important;
             font-weight: normal !important;
         }
+
+        /* Keep the hidden script-triggering tracking node transparent */
+        .script-spacer-node {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -156,7 +165,10 @@
             <!-- Background element graphic loads its responsive files using pure CSS rules now -->
             <img id="bg-image-element" class="canvas-bg-img" alt="Background">
 
-            <div id="dropdown-anchor"></div>
+            <div id="dropdown-anchor">
+                <!-- FIX: Transparent 1px image satisfies the script module's querySelector criteria -->
+                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class="script-spacer-node" alt="">
+            </div>
       
             <div class="iframe-container">
                 <iframe src="welcome_video.html" name="content-frame" id="main_frame"></iframe>
@@ -177,7 +189,7 @@
                 { title: "Ink Drawings",  filename: "./ink_drawings.html" }
             ];
 
-            // Instantiates your shared script file
+            // Instantiates your unchanged script module with its original 0,0 offsets
             new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>

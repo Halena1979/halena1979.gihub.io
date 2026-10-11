@@ -1,104 +1,186 @@
-class ImageDropdown {
-    /**
-     * @param {string} wrapperId - Element ID of your parent placement container or anchor box
-     * @param {string} iframeId - Element ID of your destination iframe target frame (e.g., 'main_frame')
-     * @param {Array<{title: string, filename: string}>} options - Dropdown selections
-     * @param {string} defaultText - Initial text showing before selection
-     * @param {number} offsetX - Horizontal shift percentage from center
-     * @param {number} offsetY - Vertical shift percentage from center
-     */
-    constructor(wrapperId, iframeId, options, defaultText = "Choose a Page...", offsetX = 0, offsetY = 0) {
-        this.container = document.getElementById(wrapperId);
-        this.iframeId = iframeId; 
-        this.options = options;
-        this.defaultText = defaultText;
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
-        this.init();
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <title>Originals by Halena</title>
 
-    init() {
-        if (!this.container) return;
+    <!-- Cache Busting Tags: Forces modern browser apps to fetch fresh code layouts immediately -->
+    <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="pragma" content="no-cache">
 
-        this.container.style.position = 'relative'; 
-        this.container.style.containerType = 'inline-size';
-        this.container.style.position = 'relative'; 
-        
-        const existingImg = this.container.querySelector('img, .responsive-img');
-        if (existingImg) {
-            existingImg.style.cursor = 'pointer';
-            existingImg.style.transition = 'transform 0.2s ease';
-            existingImg.addEventListener('mouseenter', () => existingImg.style.transform = 'scale(1.01)');
-            existingImg.addEventListener('mouseleave', () => existingImg.style.transform = 'scale(1.00)');
+    <style>
+        html, body {
+            background-color: #D1D1D1;
+            margin: 0;
+            padding: 0;
+            height: 100%; 
+            width: 100%;
+            overflow: hidden; /* Stops mobile layouts from jumping during window flips */
+        }
+	
+        /* 1. Outer viewport window wrapper that centers our graphic artwork structure */
+        .page-wrapper {
+            position: relative; 
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #D1D1D1;
+            
+            /* Thinner, clean grey border edge buffer layout zone */
+            padding: 8px; 
+            box-sizing: border-box; 
         }
 
-        // Create the HTML Text Overlay Layer
-        const textOverlay = document.createElement('div');
-        textOverlay.textContent = `${this.defaultText} ▾`;
-        textOverlay.style.position = 'absolute';
-        textOverlay.style.zIndex = '20'; 
-        textOverlay.style.width = '100%'; 
-        textOverlay.style.fontFamily = "Montserrat";
-        textOverlay.style.fontSize = 'clamp(10px, 5.5cqi, 20px)'; 
-        textOverlay.style.fontWeight = 'bold';
-        textOverlay.style.color = 'white'; 
-        textOverlay.style.textAlign = 'center';
-        textOverlay.style.pointerEvents = 'none'; 
+        /* 2. THE CANVAS: Dynamically maps the dimensions of whichever image is loading */
+        .artwork-canvas {
+            position: relative; 
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+        }
 
-        this.container.style.containerType = 'inline-size';
-
-        const finalTop = 50 + this.offsetY;
-        const finalLeft = 50 + this.offsetX;
-        
-        textOverlay.style.top = `50%`;
-        textOverlay.style.left = `50%`;
-        textOverlay.style.transform = 'translate(-50%, -50%)'; 
-
-        this.container.appendChild(textOverlay);
-
-        // Create the Invisible Select Overlay Click Area
-        const select = document.createElement('select');
-        select.style.position = 'absolute';
-        select.style.top = `${finalTop}%`;
-        select.style.left = `${finalLeft}%`;
-        select.style.transform = 'translate(-50%, -50%)';
-        select.style.width = '100%';  
-        select.style.height = '100%';   
-        select.style.opacity = '0'; 
-        select.style.cursor = 'pointer';
-        select.style.zIndex = '30'; 
-        select.style.appearance = 'none';
-        select.style.webkitAppearance = 'none';
-
-        const defaultOpt = document.createElement('option');
-        defaultOpt.value = "";
-        defaultOpt.disabled = true;
-        defaultOpt.selected = true;
-        defaultOpt.hidden = true;
-        defaultOpt.textContent = this.defaultText;
-        select.appendChild(defaultOpt);
-
-        this.options.forEach(item => {
-            const opt = document.createElement('option');
-            opt.value = item.filename;
-            opt.textContent = item.title;
-            select.appendChild(opt);
-        });
-
-        // FIXED: The internal click mechanism looks up your iframe directly now
-        select.addEventListener('change', (e) => {
-            const selectedFile = e.target.value;
-            const selectedText = select.options[select.selectedIndex].text;
+        /* 3. The true background graphic layer */
+        .canvas-bg-img {
+            position: relative; 
+            display: block;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            z-index: 1;
             
-            textOverlay.textContent = `${selectedText} ▾`;
+            /* DEFAULT NARROW ARTWORK FOR MOBILE PORTRAIT */
+            content: url('main_background_narrow.png');
+        }
 
-            // Automatically locates your target iframe and triggers the refresh
-            const targetFrame = document.getElementById(this.iframeId);
-            if (targetFrame && selectedFile) {
-                targetFrame.src = selectedFile + "?timestamp=" + new Date().getTime();
+        /* BULLETPROOF SYNCHRONIZED BREAKPOINT SWAP */
+        @media (min-width: 901px), screen and (orientation: landscape) {
+            .canvas-bg-img {
+                content: url('main_background_wide.png');
             }
-        });
+        }
 
-        this.container.appendChild(select);
-    }
-}
+        /* ========================================================
+           COORDINATE GRID TUNING KEYS
+           All percentages below track the raw image bounds natively
+           ======================================================== */
+
+        /* 1. DEFAULT MOBILE NARROW VIEW (Portrait Phone) */
+        #dropdown-anchor {
+            position: absolute;
+            z-index: 100; /* Keeps dropdown layers positioned safely ABOVE the background image */  
+            transform: translate(-50%, -50%);
+            
+            /* Pin the center point directly over the mobile black menu rectangle */
+            top: 11.5%; 
+            left: 21.5%;
+            width: 26%;  
+            height: 5%; 
+        }
+
+        .iframe-container {
+            position: absolute;
+            z-index: 10; 
+            transform: translate(-50%, -50%);
+            left: 50%;
+            
+            /* Pushes up safely to clear your portrait bottom border lines */
+            top: 48.5%;          
+            width: 98%;        
+            height: 84%;       
+        }
+
+        /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only) */
+        @media screen and (orientation: landscape) and (max-width: 900px) {
+            #dropdown-anchor {
+                background-image: none !important; 
+                left: 15.5%;  /* Center point over the landscape black menu box */
+                top: 11.5%;   
+                width: 32%;   
+                height: 6%; 
+            }
+
+            .iframe-container {
+                top: 51.5%;        
+                width: 92%;        
+                height: 58%;       
+            }
+        }
+
+        /* 3. TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets) */
+        @media screen and (min-width: 901px) {
+            #dropdown-anchor {
+                background-image: none !important; 
+                left: 13.5%;  /* Center point over the widescreen desktop menu box */
+                top: 10.5%;    
+                width: 30%;   
+                height: 6%; 
+            }
+
+            .iframe-container {
+                top: 48.5%;        
+                width: 90%;        
+                height: 69%;       
+            }
+        }
+
+        /* Reset inner frame systems */
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none; 
+            background: transparent; 
+        }
+
+        /* Ensure options text inside your native select element lists legibly */
+        #dropdown-anchor select option {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            font-weight: normal !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper" id="page-wrapper1">
+        
+        <!-- The Balanced Coordinate Canvas Container Box -->
+        <div class="artwork-canvas">
+            
+            <!-- Background element graphic loads its responsive files using pure CSS rules now -->
+            <img id="bg-image-element" class="canvas-bg-img" alt="Background">
+
+            <div id="dropdown-anchor"></div>
+      
+            <div class="iframe-container">
+                <iframe src="welcome_video.html" name="content-frame" id="main_frame"></iframe>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <!-- Dropdown Core Engine Script Link -->
+    <script src="./image_dropdown.js"></script>
+    
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const pageMenuConfig = [
+                { title: "About Me",  filename: "./about_me.html" },
+                { title: "Pet Portraits", filename: "./pet_portraits.html" },
+                { title: "Ink Drawings",  filename: "./ink_drawings.html" }
+            ];
+
+            // FIX: Passing 'bg-image-element' as your 3rd parameter maps the target perfectly across all pages!
+            new ImageDropdown('dropdown-anchor', 'main_frame', 'bg-image-element', pageMenuConfig, 'Choose a Page...',  0, 0 );
+        });
+    </script>
+
+</body>
+</html>
