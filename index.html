@@ -60,14 +60,18 @@
             z-index: 20;   
             container-type: inline-size; 
             transform: translate(-50%, -50%);
-             -webkit-text-size-adjust: 100%;
-            text-size-adjust: 100%;
+            
             
             /* ADJUST THESE FOR MOBILE: Placement of the black rectangle */
             top: 3.4;          /* Vertical position from the top edge */
             left: 12.75%;       /* Horizontal position from the left edge */
             width: 26%;        /* Width of the menu bounding box */
             height: 5%;        /* Height of the menu bounding box */
+
+            line-height: 1;      /* Strips hidden browser vertical padding differences */
+            font-size: 14px;     /* Lock the font size so browsers don't guess */
+            display: flex;       /* Forces the inner text wrapper to center cleanly */
+            align-items: center; 
         }
 
 .iframe-container {
