@@ -16,7 +16,7 @@
             overflow: hidden; /* Stops mobile layouts from jumping during window flips */
         }
 	
-        /* 1. This wrapper fills the screen, introduces a 30px padding margin, and centers our canvas */
+        /* 1. This wrapper fills the screen, introduces a 50px padding margin, and centers our canvas */
         .page-wrapper {
             position: relative;
             width: 100vw;
@@ -27,18 +27,18 @@
             align-items: center;
             background-color: #D1D1D1;
             
-            /* FIX 1: Creates a clean 30px gap around the image container, showing the grey color */
-            padding: 30px; 
+            /* FIX: Expanded from 30px to 50px to make the grey frame around your art look thicker */
+            padding: 50px; 
             box-sizing: border-box; 
         }
 
-        /* 2. THE CANVAS: Constrained to its aspect ratio boundaries so it can never distort */
+        /* 2. THE CANVAS: Constrained perfectly using max-bounds to prevent distortion */
         .artwork-canvas {
             position: relative;
             
-            /* FIX 2: Prevents stretching/distortion by letting dimensions adapt to max limits */
-            width: auto;
-            height: auto;
+            /* Using 100% bounds allows absolute child containers to resolve widths correctly on mobile */
+            width: 100%;
+            height: 100%;
             max-width: 100%;
             max-height: 100%;
             
@@ -54,7 +54,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: fill; /* Fills our locked aspect box perfectly */
+            
+            /* Object-fit contain forces the inner image to scale natively without squishing */
+            object-fit: contain; 
             z-index: 1;
         }
 
@@ -81,6 +83,9 @@
             left: 13.25%;
             width: 26%;  
             height: 5%; 
+            
+            /* Safeguards text from wrapping inside absolute layout boxes */
+            white-space: nowrap; 
         }
 
         .iframe-container {
