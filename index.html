@@ -28,7 +28,7 @@
             background-color: #D1D1D1;
         }
 
-        /* 2. THE FIX: A structural element that mimics your graphic canvas perfectly */
+        /* 2. THE CANVAS: A structural element that mimics your graphic canvas dimensions perfectly */
         .artwork-canvas {
             position: relative;
             /* Scale fluidly until it hits the max boundaries of the user screen */
@@ -43,7 +43,7 @@
             display: block;
         }
 
-        /* 3. The true background element tags layer */
+        /* 3. The true background element image layer */
         .canvas-bg-img {
             position: absolute;
             top: 0;
@@ -94,9 +94,10 @@
            Triggers if screen is landscape BUT narrow (under 900px wide) */
         @media screen and (orientation: landscape) and (max-width: 900px) {
             #dropdown-anchor {
-                left: 15.5%;  /* Adjust independently for rotated phone screen view */
-                top: 11.5%;   
-                width: 24%;   
+                background-image: none !important; /* Fixes duplicate background bugs */
+                left: 12.5%;  /* Pulled back left to sit cleanly on your rectangle */
+                top: 10.5%;   
+                width: 32%;   /* Widened to prevent text wrapping/shifting side offsets */
                 height: 6%; 
             }
 
@@ -111,10 +112,10 @@
            Triggers if the screen is wider than 901px regardless of orientation */
         @media screen and (min-width: 901px) {
             #dropdown-anchor {
-                /* Your working desktop parameters that look good */
-                left: 13.5%;   
+                background-image: none !important; /* Fixes duplicate background bugs */
+                left: 10.5%;  /* Pulled back left to sit cleanly on your rectangle */
                 top: 10.5%;    
-                width: 22%;   
+                width: 30%;   /* Widened to prevent text wrapping/shifting side offsets */
                 height: 6%; 
             }
 
@@ -137,7 +138,11 @@
 <body>
 
     <div class="page-wrapper" id="page-wrapper1">
+        
+        <!-- The Locked Aspect Canvas Block -->
         <div class="artwork-canvas">
+            
+            <!-- Dynamic img tag handles rendering natively across all viewports -->
             <img id="bg-image-element" src="main_background_narrow.png" class="canvas-bg-img" alt="Background">
 
             <div id="dropdown-anchor"></div>
@@ -145,36 +150,46 @@
             <div class="iframe-container">
                 <iframe src="welcome_video.html" name="content-frame" id="main_frame"></iframe>
             </div>
+            
         </div>
+
     </div>
 
+    <!-- Dropdown Core Engine Script Link -->
     <script src="./image_dropdown.js"></script>
+    
     <script>
+        // Automatic Image Source Engine Switcher
         function updateResponsiveImageSource() {
             const imgElement = document.getElementById('bg-image-element');
             if (!imgElement) return;
 
-            // Updated width parameter here to match our 901px CSS shift break point
+            // Checked width parameters match our 901px CSS shift break point exactly
             const isWidescreen = window.innerWidth >= 901 || window.matchMedia("(orientation: landscape)").matches;
             const targetSrc = isWidescreen ? "main_background_wide.png" : "main_background_narrow.png";
 
+            // Swap source file path only when necessary to save browser performance loops
             if (!imgElement.src.includes(targetSrc)) {
                 imgElement.src = targetSrc;
             }
         }
 
+        // Initialize background orientation monitors
         window.addEventListener('resize', updateResponsiveImageSource);
         window.addEventListener('DOMContentLoaded', () => {
             updateResponsiveImageSource();
 
+            // Your dropdown link index menu settings matrix
             const pageMenuConfig = [
                 { title: "About Me",  filename: "./about_me.html" },
                 { title: "Pet Portraits", filename: "./pet_portraits.html" },
                 { title: "Ink Drawings",  filename: "./ink_drawings.html" }
             ];
 
+            // Instantiate your background dropdown navigation element
             new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>
+
 </body>
 </html>
