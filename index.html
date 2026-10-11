@@ -13,10 +13,10 @@
             padding: 0;
             height: 100%; 
             width: 100%;
-            overflow: hidden; /* Prevents scrollbars when rotating mobile screens */
+            overflow: hidden; /* Stops mobile layouts from jumping during window flips */
         }
 	
-        /* 1. This outer wrapper fills the screen and keeps the inner artwork perfectly centered */
+        /* 1. The outer screen frame centers our locked canvas box in the window */
         .page-wrapper {
             position: relative;
             width: 100vw;
@@ -28,120 +28,113 @@
             background-color: #D1D1D1;
         }
 
-        /* 2. NEW FIXED BOUNDARY LAYER: This box matches your narrow image aspect ratio perfectly */
+        /* 2. THE FIX: A structural element that mimics your graphic canvas perfectly */
         .artwork-canvas {
             position: relative;
+            /* Scale fluidly until it hits the max boundaries of the user screen */
             width: 100%;
             height: 100%;
-            aspect-ratio: 1080 / 1920; /* Matches your mobile narrow graphic proportions */
+            max-width: 100vw;
+            max-height: 100vh;
+            max-height: 100dvh;
             
-            background-image: url('main_background_narrow.png'); 
-            background-size: contain;      
-            background-position: center;  
-            background-repeat: no-repeat;
-            background-color: transparent;
+            /* DEFAULT NARROW ASPECT: Forces the parent container to map your mobile shape */
+            aspect-ratio: 1080 / 1920; 
+            display: block;
         }
 
-        /* 3. DESKTOP VIEW CHANGES: Flips aspect ratio and background image when screen gets wide */
+        /* 3. The true background element tags layer */
+        .canvas-bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: fill; /* Fills our locked aspect box perfectly */
+            z-index: 1;
+        }
+
+        /* 4. WIDESCREEN ASPECT FLIP: Changes the container shape when screen is wide */
         @media (min-width: 768px), screen and (orientation: landscape) {
             .artwork-canvas {
-                aspect-ratio: 1920 / 1080; /* Matches your desktop wide graphic proportions */
-                background-image: url('main_background_wide.png'); 
-                background-size: contain; 
-                background-position: center;
-                background-repeat: no-repeat;
+                aspect-ratio: 1920 / 1080; /* Flips the container box to match your wide image */
             }
         }
 
-        /* All absolute elements below are now locked strictly to the image edges instead of the screen monitor */
+        /* ========================================================
+           COORDINATE GRID TUNING KEYS
+           All percentages below track the raw image bounds natively
+           ======================================================== */
 
+        /* Mobile Narrow Layout Placements */
         #dropdown-anchor {
             position: absolute;
             z-index: 20;   
             container-type: inline-size; 
             transform: translate(-50%, -50%);
             
-            
-            /* ADJUST THESE FOR MOBILE: Placement of the black rectangle */
-            top: 6.4;          /* Vertical position from the top edge */
-            left: 12.75%;       /* Horizontal position from the left edge */
-            width: 26%;        /* Width of the menu bounding box */
-            height: 5%;        /* Height of the menu bounding box */
-
+            /* Tweak these for Mobile Narrow */
+            top: 11%; 
+            left: 21.5%;
+            width: 26%;  
+            height: 5%; 
         }
 
-.iframe-container {
-    position: absolute;
-    z-index: 10; 
-    overflow: hidden;
-    border: none;
-    outline: none;
-    background: transparent; 
-    transform: translate(-50%, -50%);
-    left: 50%;         /* Keeps the frame horizontally centered */
-    
-    /* ADJUST THESE FOR MOBILE: Proportions of your whitespace box */
-    top: 53%;          /* Vertical position of the iframe's center point */
-    width: 60%;        /* Width of the iframe box */
-    height: 65%;       /* Height of the iframe box (lower this if it leaks out the bottom) */
-}
+        .iframe-container {
+            position: absolute;
+            z-index: 10; 
+            transform: translate(-50%, -50%);
+            left: 50%;
+            
+            /* Tweak these for Mobile Narrow */
+            top: 53%;
+            width: 60%; 
+            height: 65%; /* Lower this percentage if the iframe leaks out the bottom on mobile */
+        }
 
-.iframe-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none; 
-    background: transparent; 
-}
+        /* Desktop Widescreen Layout Placements Override */
+        @media (min-width: 768px), screen and (orientation: landscape) {
+            #dropdown-anchor {
+                /* Tweak these for Desktop Wide */
+                top: 15%;     /* Lower percentage moves it UP, higher moves it DOWN */
+                left: 18%;    /* Lower percentage moves it LEFT, higher moves it RIGHT */
+                width: 22%;   /* Width of clickable dropdown container box */
+                height: 6%; 
+            }
 
+            .iframe-container {
+                /* Tweak these for Desktop Wide */
+                top: 55%;     /* Vertical center placement */
+                width: 55%;   /* Width of iframe canvas view window */
+                height: 55%;  /* LOWER THIS if frame page text overlaps your image bottom graphics */
+            }
+        }
 
-/* ==========================================
-   2. DESKTOP CONFIGURATION (Widescreen)
-   Adjust these values for your "_wide" image 
-   ========================================== */
-
-@media (min-width: 768px), screen and (orientation: landscape) {
-    .artwork-canvas {
-        aspect-ratio: 1920 / 1080; 
-        background-image: url('main_background_wide.png'); 
-        background-size: contain; 
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-
-    /* OVERRIDE COORDINATES SPECIFICALLY FOR THE DESKTOP GRAPHIC */
-    #dropdown-anchor {
-        /* Tweak these until it lands dead-center over the wide image's black rectangle */
-        top: 13.75%;      /* Change this percentage to move it up or down on desktop */
-        left: 9.0%;     /* Change this percentage to move it left or right on desktop */
-        width: 22%;    /* Desktop width mapping adjustments */
-        height: 6%;    /* Desktop height mapping adjustments */
-        
-            line-height: 1;      /* Strips hidden browser vertical padding differences */
-            font-size: 14px;     /* Lock the font size so browsers don't guess */
-            display: flex;       /* Forces the inner text wrapper to center cleanly */
-            align-items: center; 
-    }
-
-    .iframe-container {
-        /* Tweak these until it cleanly sits inside the wide image's whitespace box */
-        top: 55%;      /* Vertical center point on desktop */
-        width: 55%;    /* Shrink this percentage if it bleeds left/right on desktop */
-        height: 58%;   /* LOWER THIS PERCENTAGE if your iframe text overlaps the image bottom */
-    }
-}
+        /* Reset inner frame systems */
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none; 
+            background: transparent; 
+        }
     </style>
 </head>
 <body>
 
     <div class="page-wrapper" id="page-wrapper1">
         
-        <!-- FIX: This wrapper captures your elements and locks them to the background scaling coordinates -->
+        <!-- The Locked Aspect Canvas Block -->
         <div class="artwork-canvas">
+            
+            <!-- Dynamic img tag replaces the old broken CSS background layout rules -->
+            <img id="bg-image-element" src="main_background_narrow.png" class="canvas-bg-img" alt="Background">
+
             <div id="dropdown-anchor"></div>
       
             <div class="iframe-container">
                 <iframe src="welcome_video.html" name="content-frame" id="main_frame"></iframe>
             </div>
+            
         </div>
 
     </div>
@@ -149,7 +142,25 @@
     <script src="./image_dropdown.js"></script>
     
     <script>
+        // Automatic Image Source Engine Switcher
+        function updateResponsiveImageSource() {
+            const imgElement = document.getElementById('bg-image-element');
+            if (!imgElement) return;
+
+            const isWidescreen = window.innerWidth >= 768 || window.matchMedia("(orientation: landscape)").matches;
+            const targetSrc = isWidescreen ? "main_background_wide.png" : "main_background_narrow.png";
+
+            // Swap source only if necessary to save performance rendering loops
+            if (!imgElement.src.includes(targetSrc)) {
+                imgElement.src = targetSrc;
+            }
+        }
+
+        // Initialize background orientation monitors
+        window.addEventListener('resize', updateResponsiveImageSource);
         window.addEventListener('DOMContentLoaded', () => {
+            updateResponsiveImageSource();
+
             const pageMenuConfig = [
                 { title: "About Me",  filename: "./about_me.html" },
                 { title: "Pet Portraits", filename: "./pet_portraits.html" },
