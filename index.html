@@ -63,18 +63,19 @@
 
         /* ========================================================
            COORDINATE GRID TUNING KEYS
-           FIX: Removed 'transform: translate(-50%, -50%)' from anchor 
-           to stop it from clashing with the script's internal math.
+           FIXED: Re-introduced 'transform: translate(-50%, -50%)' 
+           so the container anchors match the script's center pins perfectly.
            ======================================================== */
 
         /* 1. DEFAULT MOBILE NARROW VIEW (Portrait Phone) */
         #dropdown-anchor {
             position: absolute;
             z-index: 20;   
+            transform: translate(-50%, -50%);
             
-            /* Pin the TOP-LEFT corner of the box exactly over the black rectangle */
-            top: 9%;         /* 👈 Adjusted to map top-left corner bounds */
-            left: 8.5%;      /* 👈 Adjusted to map top-left corner bounds */
+            /* Pin the center point over the mobile black menu box */
+            top: 11.5%; 
+            left: 21.5%;
             width: 26%;  
             height: 5%; 
             white-space: nowrap; 
@@ -86,7 +87,7 @@
             transform: translate(-50%, -50%);
             left: 50%;
             
-            /* Aligned to clear the bottom border line cleanly */
+            /* Pushes up safely to clear your portrait bottom border lines */
             top: 48.5%;          
             width: 98%;        
             height: 84%;       
@@ -96,8 +97,8 @@
         @media screen and (orientation: landscape) and (max-width: 900px) {
             #dropdown-anchor {
                 background-image: none !important; 
-                top: 7.5%;     /* 👈 Top-left corner override for wide mobile asset */
-                left: -0.5%;   /* 👈 Top-left corner override for wide mobile asset */
+                left: 15.5%;  /* Center point over the landscape black menu box */
+                top: 11.5%;   
                 width: 32%;   
                 height: 6%; 
             }
@@ -113,8 +114,8 @@
         @media screen and (min-width: 901px) {
             #dropdown-anchor {
                 background-image: none !important; 
-                top: 7.5%;     /* 👈 Top-left corner override for widescreen desktop asset */
-                left: -1.5%;   /* 👈 Top-left corner override for widescreen desktop asset */
+                left: 13.5%;  /* Center point over the widescreen desktop menu box */
+                top: 10.5%;    
                 width: 30%;   
                 height: 6%; 
             }
@@ -134,7 +135,7 @@
             background: transparent; 
         }
 
-        /* Force option menu text styling to render legibly */
+        /* Forces native option text styling choices to render legibly */
         #dropdown-anchor select option {
             background-color: #ffffff !important;
             color: #000000 !important;
@@ -174,7 +175,7 @@
             ];
 
             // Instantiates your menu layer with 0, 0 offsets.
-            // The script will now handle centering the text perfectly inside our box bounds!
+            // The script will now center the overlay text layers inside our box.
             new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>
