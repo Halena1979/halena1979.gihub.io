@@ -40,7 +40,7 @@
             max-height: 100%;
         }
 
-        /* 3. The true background graphic player engine setup */
+        /* 3. The true background graphic layer */
         .canvas-bg-img {
             position: relative; 
             display: block;
@@ -48,7 +48,7 @@
             height: auto;
             max-width: 100%;
             max-height: 100%;
-            z-index: 1;
+            z-index: 1; /* Lowest stacking depth */
             
             /* DEFAULT NARROW ARTWORK FOR MOBILE PORTRAIT */
             content: url('main_background_narrow.png');
@@ -63,14 +63,12 @@
 
         /* ========================================================
            COORDINATE GRID TUNING KEYS
-           FIXED: Re-introduced 'transform: translate(-50%, -50%)' 
-           so the container anchors match the script's center pins perfectly.
            ======================================================== */
 
         /* 1. DEFAULT MOBILE NARROW VIEW (Portrait Phone) */
         #dropdown-anchor {
             position: absolute;
-            z-index: 20;   
+            z-index: 100; /* HIGH Z-INDEX: Forces the dropdown container ABOVE the background image layer */  
             transform: translate(-50%, -50%);
             
             /* Pin the center point over the mobile black menu box */
@@ -96,7 +94,6 @@
         /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only) */
         @media screen and (orientation: landscape) and (max-width: 900px) {
             #dropdown-anchor {
-                background-image: none !important; 
                 left: 15.5%;  /* Center point over the landscape black menu box */
                 top: 11.5%;   
                 width: 32%;   
@@ -113,7 +110,6 @@
         /* 3. TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets) */
         @media screen and (min-width: 901px) {
             #dropdown-anchor {
-                background-image: none !important; 
                 left: 13.5%;  /* Center point over the widescreen desktop menu box */
                 top: 10.5%;    
                 width: 30%;   
@@ -135,7 +131,7 @@
             background: transparent; 
         }
 
-        /* Forces native option text styling choices to render legibly */
+        /* Ensure options text inside your native select element lists legibly */
         #dropdown-anchor select option {
             background-color: #ffffff !important;
             color: #000000 !important;
@@ -175,7 +171,6 @@
             ];
 
             // Instantiates your menu layer with 0, 0 offsets.
-            // The script will now center the overlay text layers inside our box.
             new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>
