@@ -27,33 +27,39 @@
             align-items: center;
             background-color: #D1D1D1;
             
-            /* Thicker grey padding frame edge buffer zone */
-            padding: 50px; 
+            /* FIX 1: Much thinner, clean grey border edge buffer layout zone */
+            padding: 8px; 
             box-sizing: border-box; 
         }
 
-        /* 2. THE CANVAS: Inherits dimensions natively from the active image file down below */
+        /* 2. THE CANVAS: Dynamically maps the dimensions of whichever image is loading */
         .artwork-canvas {
             position: relative;
             display: block;
-            
-            /* Max limits keep the container scale contained safely inside the 50px grey padding boundaries */
             max-width: 100%;
             max-height: 100%;
         }
 
         /* 3. The true background graphic player engine setup */
         .canvas-bg-img {
-            /* FIX: Changing to relative forces the parent container to automatically map its exact size */
             position: relative; 
             display: block;
-            
-            /* Fluidly fills limits without stretching out of proportion */
             width: auto;
             height: auto;
             max-width: 100%;
             max-height: 100%;
             z-index: 1;
+            
+            /* DEFAULT NARROW ARTWORK FOR MOBILE PORTRAIT */
+            content: url('main_background_narrow.png');
+        }
+
+        /* FIX 3: BULLETPROOF SYNCHRONIZED BREAKPOINT SWAP
+           Swaps the image source file inside CSS at the exact instant the layout metrics shift */
+        @media (min-width: 901px), screen and (orientation: landscape) {
+            .canvas-bg-img {
+                content: url('main_background_wide.png');
+            }
         }
 
         /* ========================================================
@@ -61,16 +67,17 @@
            All percentages below track the raw image bounds natively
            ======================================================== */
 
-        /* 1. DEFAULT MOBILE NARROW VIEW */
+        /* 1. DEFAULT MOBILE NARROW VIEW (Portrait Phone) */
         #dropdown-anchor {
             position: absolute;
             z-index: 20;   
             container-type: inline-size; 
             transform: translate(-50%, -50%);
             
-            top: 3.5%; 
-            left: 13.25%;
-            width: 26%;  
+            /* FIX 2: Moved dropdown down onto the narrow black rectangle */
+            top: 11.5%; 
+            left: 21.5%;
+            width: 28%;  
             height: 5%; 
             white-space: nowrap; 
         }
@@ -81,16 +88,16 @@
             transform: translate(-50%, -50%);
             left: 50%;
             
-            top: 48%;          
-            width: 98%;        
-            height: 84%;       
+            /* FIX 2: Moved content frame down to perfectly align with narrow text box borders */
+            top: 53.5%;          
+            width: 61%;        
+            height: 64%;       
         }
 
         /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only)
            Triggers if screen is landscape BUT narrow (under 900px wide) */
         @media screen and (orientation: landscape) and (max-width: 900px) {
             #dropdown-anchor {
-                background-image: none !important; 
                 left: 6.5%;  
                 top: 10.5%;   
                 width: 32%;   
@@ -108,7 +115,6 @@
            Triggers if the screen is wider than 901px regardless of orientation */
         @media screen and (min-width: 901px) {
             #dropdown-anchor {
-                background-image: none !important; 
                 left: 5.5%;  
                 top: 10.5%;    
                 width: 30%;   
@@ -138,8 +144,8 @@
         <!-- The Balanced Coordinate Canvas Container Block -->
         <div class="artwork-canvas">
             
-            <!-- Dynamic img tag establishes visual scale constraints natively -->
-            <img id="bg-image-element" src="main_background_narrow.png" class="canvas-bg-img" alt="Background">
+            <!-- Background element graphic loads its responsive files using pure CSS rules now -->
+            <img id="bg-image-element" class="canvas-bg-img" alt="Background">
 
             <div id="dropdown-anchor"></div>
       
@@ -155,28 +161,16 @@
     <script src="./image_dropdown.js"></script>
     
     <script>
-        function updateResponsiveImageSource() {
-            const imgElement = document.getElementById('bg-image-element');
-            if (!imgElement) return;
-
-            const isWidescreen = window.innerWidth >= 901 || window.matchMedia("(orientation: landscape)").matches;
-            const targetSrc = isWidescreen ? "main_background_wide.png" : "main_background_narrow.png";
-
-            if (!imgElement.src.includes(targetSrc)) {
-                imgElement.src = targetSrc;
-            }
-        }
-
-        window.addEventListener('resize', updateResponsiveImageSource);
+        // CLEANUP: Responsive resizing code has been offloaded to the CSS layout engine to prevent lag shifts
         window.addEventListener('DOMContentLoaded', () => {
-            updateResponsiveImageSource();
-
+            // Your dropdown link index menu settings matrix
             const pageMenuConfig = [
                 { title: "About Me",  filename: "./about_me.html" },
                 { title: "Pet Portraits", filename: "./pet_portraits.html" },
                 { title: "Ink Drawings",  filename: "./ink_drawings.html" }
             ];
 
+            // Instantiate your background dropdown navigation element
             new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>
