@@ -18,7 +18,7 @@
 	
         /* 1. Outer viewport window wrapper that centers our graphic artwork structure */
         .page-wrapper {
-            position: relative;
+            position: relative; /* CRUCIAL: Keeps all absolute metrics locked inside this grid space */
             width: 100vw;
             height: 100vh;
             height: 100dvh; 
@@ -34,7 +34,7 @@
 
         /* 2. THE CANVAS: Dynamically maps the dimensions of whichever image is loading */
         .artwork-canvas {
-            position: relative;
+            position: relative; /* Forces absolute children coordinates to calculate from the image borders */
             display: block;
             max-width: 100%;
             max-height: 100%;
@@ -74,9 +74,9 @@
             container-type: inline-size; 
             transform: translate(-50%, -50%);
             
-            /* FIXED: Reconfigured to stay clearly in view over your portrait asset block */
-            top: 3.5%; 
-            left: 13.25%;
+            /* FIXED: Pinned firmly to the top-left section over your portrait artwork menu zone */
+            top: 11.5%; 
+            left: 21.5%;
             width: 26%;  
             height: 5%; 
             white-space: nowrap; 
@@ -88,8 +88,8 @@
             transform: translate(-50%, -50%);
             left: 50%;
             
-            /* FIXED: Maximized to consume all 4 directions and balanced the slight vertical offset up */
-            top: 53.5%;          
+            /* FIXED: Lifted up by exactly 5% (from 53.5% to 48.5%) to clear your bottom border line */
+            top: 48.5%;          
             width: 98%;        
             height: 84%;       
         }
@@ -99,8 +99,8 @@
         @media screen and (orientation: landscape) and (max-width: 900px) {
             #dropdown-anchor {
                 background-image: none !important; 
-                left: 6.5%;  
-                top: 10.5%;   
+                left: 15.5%;  /* Aligned over your wide background asset menu zone */
+                top: 11.5%;   
                 width: 32%;   
                 height: 6%; 
             }
@@ -117,14 +117,13 @@
         @media screen and (min-width: 901px) {
             #dropdown-anchor {
                 background-image: none !important; 
-                left: 5.5%;  
+                left: 13.5%;  /* Aligned over your wide background asset menu zone */
                 top: 10.5%;    
                 width: 30%;   
                 height: 6%; 
             }
 
             .iframe-container {
-                /* FIXED: Lifted slightly from 49.5% to 48.5% to clear the bottom image overlap */
                 top: 48.5%;        
                 width: 90%;        
                 height: 69%;       
@@ -144,7 +143,7 @@
 
     <div class="page-wrapper" id="page-wrapper1">
         
-        <!-- The Balanced Coordinate Canvas Container Block -->
+        <!-- The Balanced Coordinate Canvas Container Box -->
         <div class="artwork-canvas">
             
             <!-- Background element graphic loads its responsive files using pure CSS rules now -->
@@ -166,14 +165,12 @@
     <script>
         // Responsive resizing code is offloaded to the CSS layout engine to prevent lag shifts
         window.addEventListener('DOMContentLoaded', () => {
-            // Your dropdown link index menu settings matrix
             const pageMenuConfig = [
                 { title: "About Me",  filename: "./about_me.html" },
                 { title: "Pet Portraits", filename: "./pet_portraits.html" },
                 { title: "Ink Drawings",  filename: "./ink_drawings.html" }
             ];
 
-            // Instantiate your background dropdown navigation element
             new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>
