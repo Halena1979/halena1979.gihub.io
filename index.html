@@ -27,7 +27,7 @@
             align-items: center;
             background-color: #D1D1D1;
             
-            /* FIX 1: Much thinner, clean grey border edge buffer layout zone */
+            /* Thinner, clean grey border edge buffer layout zone */
             padding: 8px; 
             box-sizing: border-box; 
         }
@@ -54,7 +54,7 @@
             content: url('main_background_narrow.png');
         }
 
-        /* FIX 3: BULLETPROOF SYNCHRONIZED BREAKPOINT SWAP
+        /* BULLETPROOF SYNCHRONIZED BREAKPOINT SWAP
            Swaps the image source file inside CSS at the exact instant the layout metrics shift */
         @media (min-width: 901px), screen and (orientation: landscape) {
             .canvas-bg-img {
@@ -74,10 +74,10 @@
             container-type: inline-size; 
             transform: translate(-50%, -50%);
             
-            /* FIX 2: Moved dropdown down onto the narrow black rectangle */
-            top: 11.5%; 
-            left: 21.5%;
-            width: 28%;  
+            /* FIXED: Reconfigured to stay clearly in view over your portrait asset block */
+            top: 3.5%; 
+            left: 13.25%;
+            width: 26%;  
             height: 5%; 
             white-space: nowrap; 
         }
@@ -88,16 +88,17 @@
             transform: translate(-50%, -50%);
             left: 50%;
             
-            /* FIX 2: Moved content frame down to perfectly align with narrow text box borders */
+            /* FIXED: Maximized to consume all 4 directions and balanced the slight vertical offset up */
             top: 53.5%;          
-            width: 61%;        
-            height: 64%;       
+            width: 98%;        
+            height: 84%;       
         }
 
         /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only)
            Triggers if screen is landscape BUT narrow (under 900px wide) */
         @media screen and (orientation: landscape) and (max-width: 900px) {
             #dropdown-anchor {
+                background-image: none !important; 
                 left: 6.5%;  
                 top: 10.5%;   
                 width: 32%;   
@@ -115,6 +116,7 @@
            Triggers if the screen is wider than 901px regardless of orientation */
         @media screen and (min-width: 901px) {
             #dropdown-anchor {
+                background-image: none !important; 
                 left: 5.5%;  
                 top: 10.5%;    
                 width: 30%;   
@@ -122,7 +124,8 @@
             }
 
             .iframe-container {
-                top: 49.5%;        
+                /* FIXED: Lifted slightly from 49.5% to 48.5% to clear the bottom image overlap */
+                top: 48.5%;        
                 width: 90%;        
                 height: 69%;       
             }
@@ -161,7 +164,7 @@
     <script src="./image_dropdown.js"></script>
     
     <script>
-        // CLEANUP: Responsive resizing code has been offloaded to the CSS layout engine to prevent lag shifts
+        // Responsive resizing code is offloaded to the CSS layout engine to prevent lag shifts
         window.addEventListener('DOMContentLoaded', () => {
             // Your dropdown link index menu settings matrix
             const pageMenuConfig = [
