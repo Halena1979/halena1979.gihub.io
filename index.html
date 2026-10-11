@@ -57,19 +57,13 @@
             height: 100%;
             object-fit: fill; /* Fills our aspect container box perfectly with zero trailing edges */
             z-index: 1;
-            
-            /* DEFAULT NARROW ARTWORK FOR MOBILE PORTRAIT */
-            content: url('main_background_narrow.png');
         }
 
-        /* BULLETPROOF SYNCHRONIZED BREAKPOINT SWAP */
+        /* WIDESCREEN ASPECT FLIP: Changes the container shape when screen is wide or turned landscape */
         @media (min-width: 901px), screen and (orientation: landscape) {
             .artwork-canvas {
                 /* Flip the bounding aspect frame to match the desktop widescreen dimensions */
                 aspect-ratio: 1920 / 1080;
-            }
-            .canvas-bg-img {
-                content: url('main_background_wide.png');
             }
         }
 
@@ -155,12 +149,7 @@
             font-weight: normal !important;
         }
 
-        /* ========================================================
-           FIX: THE BULLETPROOF LAYOUT INTERCEPTOR OVERRIDES
-           Forces the text element overlay and invisible click area 
-           created by your script to stick exactly inside the anchor box 
-           instead of flying to the center of the viewport window
-           ======================================================== */
+        /* Intercept script rendering metrics to force perfect overlay mapping */
         #dropdown-anchor > div,
         #dropdown-anchor > select {
             position: absolute !important;
@@ -181,8 +170,8 @@
         <!-- The Balanced Coordinate Canvas Container Box -->
         <div class="artwork-canvas">
             
-            <!-- Background element graphic loads its responsive files using pure CSS rules now -->
-            <img id="bg-image-element" class="canvas-bg-img" alt="Background">
+            <!-- FIXED: Back to a clean native src definition path to prevent canvas dimension collapse bugs -->
+            <img id="bg-image-element" src="main_background_narrow.png" class="canvas-bg-img" alt="Background">
 
             <div id="dropdown-anchor"></div>
       
@@ -198,7 +187,26 @@
     <script src="image_dropdown.js"></script>
     
     <script>
+        // Automatic Image Source Engine Switcher
+        function updateResponsiveImageSource() {
+            const imgElement = document.getElementById('bg-image-element');
+            if (!imgElement) return;
+
+            // Check viewport metrics directly against our 901px CSS shift break point exactly
+            const isWidescreen = window.innerWidth >= 901 || window.matchMedia("(orientation: landscape)").matches;
+            const targetSrc = isWidescreen ? "main_background_wide.png" : "main_background_narrow.png";
+
+            // Swap source file path only when necessary to save browser performance loops
+            if (!imgElement.src.includes(targetSrc)) {
+                imgElement.src = targetSrc;
+            }
+        }
+
+        // Initialize viewport tracking engine links
+        window.addEventListener('resize', updateResponsiveImageSource);
         window.addEventListener('DOMContentLoaded', () => {
+            updateResponsiveImageSource();
+
             const pageMenuConfig = [
                 { title: "About Me",  filename: "./about_me.html" },
                 { title: "Pet Portraits", filename: "./pet_portraits.html" },
