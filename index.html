@@ -12,17 +12,14 @@
             margin: 0;
             padding: 0;
             height: 100%; 
-            width: 100%;
-            overflow: hidden; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            overflow-x: hidden; 
         }
 	
         /* This container forces itself to sit EXACTLY where the image canvas sits, no matter the ratio */
         .page-wrapper {
             position: relative;
             width: 100vw;
+            min-height: 100vh;
             min-height: 100dvh; /* dvh protects mobile viewports from collapsing under changing UI address bars */
             
             /* Call your SVG background path directly */
