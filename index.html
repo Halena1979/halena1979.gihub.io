@@ -56,17 +56,17 @@
         /* All absolute elements below are now locked strictly to the image edges instead of the screen monitor */
 
         #dropdown-anchor {
-    position: absolute;
-    z-index: 20;   
-    container-type: inline-size; 
-    transform: translate(-50%, -50%);
-    
-    /* ADJUST THESE FOR MOBILE: Placement of the black rectangle */
-    top: 15%;          /* Vertical position from the top edge */
-    left: 19%;       /* Horizontal position from the left edge */
-    width: 26%;        /* Width of the menu bounding box */
-    height: 5%;        /* Height of the menu bounding box */
-}
+            position: absolute;
+            z-index: 20;   
+            container-type: inline-size; 
+            transform: translate(-50%, -50%);
+            
+            /* ADJUST THESE FOR MOBILE: Placement of the black rectangle */
+            top: 6%;          /* Vertical position from the top edge */
+            left: 15%;       /* Horizontal position from the left edge */
+            width: 26%;        /* Width of the menu bounding box */
+            height: 5%;        /* Height of the menu bounding box */
+        }
 
 .iframe-container {
     position: absolute;
@@ -109,8 +109,8 @@
     /* OVERRIDE COORDINATES SPECIFICALLY FOR THE DESKTOP GRAPHIC */
     #dropdown-anchor {
         /* Tweak these until it lands dead-center over the wide image's black rectangle */
-        top: 11%;      /* Change this percentage to move it up or down on desktop */
-        left: 8%;     /* Change this percentage to move it left or right on desktop */
+        top: 9%;      /* Change this percentage to move it up or down on desktop */
+        left: 6%;     /* Change this percentage to move it left or right on desktop */
         width: 22%;    /* Desktop width mapping adjustments */
         height: 6%;    /* Desktop height mapping adjustments */
     }
