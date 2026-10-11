@@ -92,23 +92,56 @@
             height: 65%; /* Lower this percentage if the iframe leaks out the bottom on mobile */
         }
 
-        /* Desktop Widescreen Layout Placements Override */
-        @media (min-width: 768px), screen and (orientation: landscape) {
-            #dropdown-anchor {
-                /* Tweak these for Desktop Wide */
-                top: 9.45;     /* Lower percentage moves it UP, higher moves it DOWN */
-                left: 7.2%;    /* Lower percentage moves it LEFT, higher moves it RIGHT */
-                width: 22%;   /* Width of clickable dropdown container box */
-                height: 6%; 
-            }
+       /* =============================================================
+   2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways)
+   Triggers if the screen is horizontal AND narrow (under 900px)
+   ============================================================= */
+@media screen and (orientation: landscape) and (max-width: 900px) {
+    .artwork-canvas {
+        aspect-ratio: 1920 / 1080; /* Displays your wide desktop background */
+        background-image: url('main_background_wide.png');
+    }
 
-            .iframe-container {
-                /* Tweak these for Desktop Wide */
-                top: 55%;     /* Vertical center placement */
-                width: 55%;   /* Width of iframe canvas view window */
-                height: 55%;  /* LOWER THIS if frame page text overlaps your image bottom graphics */
-            }
-        }
+    #dropdown-anchor {
+        /* ADJUST THESE FOR MOBILE LANDSCAPE: */
+        /* Since it is drifting too far left, INCREASE this number slightly */
+        left: 15.5%;  /* 👈 Try 15.5% or 16% to push it back to the RIGHT */
+        top: 11.5%;   /* Adjust to move the menu box up or down */
+        width: 24%;   
+        height: 6%; 
+    }
+
+    .iframe-container {
+        top: 55%;
+        width: 55%;
+        height: 53%; /* Scaled down slightly for tight mobile landscape windows */
+    }
+}
+
+/* =============================================================
+   3. TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets)
+   Triggers if the screen is wider than 901px
+   ============================================================= */
+@media screen and (min-width: 901px) {
+    .artwork-canvas {
+        aspect-ratio: 1920 / 1080;
+        background-image: url('main_background_wide.png');
+    }
+
+    #dropdown-anchor {
+        /* Your working desktop parameters that look good */
+        left: 13.5%;   
+        top: 10.5%;    
+        width: 22%;   
+        height: 6%; 
+    }
+
+    .iframe-container {
+        top: 55%;     
+        width: 55%;   
+        height: 55%;  
+    }
+}
 
         /* Reset inner frame systems */
         .iframe-container iframe {
