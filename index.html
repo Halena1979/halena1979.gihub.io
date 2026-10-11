@@ -18,7 +18,7 @@
 	
         /* 1. Outer viewport window wrapper that centers our graphic artwork structure */
         .page-wrapper {
-            position: relative; /* CRUCIAL: Keeps all absolute metrics locked inside this grid space */
+            position: relative; 
             width: 100vw;
             height: 100vh;
             height: 100dvh; 
@@ -34,7 +34,7 @@
 
         /* 2. THE CANVAS: Dynamically maps the dimensions of whichever image is loading */
         .artwork-canvas {
-            position: relative; /* Forces absolute children coordinates to calculate from the image borders */
+            position: relative; 
             display: block;
             max-width: 100%;
             max-height: 100%;
@@ -54,8 +54,7 @@
             content: url('main_background_narrow.png');
         }
 
-        /* BULLETPROOF SYNCHRONIZED BREAKPOINT SWAP
-           Swaps the image source file inside CSS at the exact instant the layout metrics shift */
+        /* BULLETPROOF SYNCHRONIZED BREAKPOINT SWAP */
         @media (min-width: 901px), screen and (orientation: landscape) {
             .canvas-bg-img {
                 content: url('main_background_wide.png');
@@ -63,23 +62,20 @@
         }
 
         /* ========================================================
-           COORDINATE GRID TUNING KEYS
-           All percentages below track the raw image bounds natively
+           COORDINATE GRID PLACEMENT BOXES
+           We now pass percentages directly to the JavaScript class
            ======================================================== */
 
-        /* 1. DEFAULT MOBILE NARROW VIEW (Portrait Phone) */
         #dropdown-anchor {
             position: absolute;
             z-index: 20;   
-            container-type: inline-size; 
             transform: translate(-50%, -50%);
             
-            /* FIXED: Pinned firmly to the top-left section over your portrait artwork menu zone */
+            /* DEFAULT MOBILE NARROW VALUES */
             top: 11.5%; 
             left: 21.5%;
             width: 26%;  
             height: 5%; 
-            white-space: nowrap; 
         }
 
         .iframe-container {
@@ -88,23 +84,20 @@
             transform: translate(-50%, -50%);
             left: 50%;
             
-            /* FIXED: Lifted up by exactly 5% (from 53.5% to 48.5%) to clear your bottom border line */
+            /* Aligned to clear the bottom border line cleanly */
             top: 48.5%;          
             width: 98%;        
             height: 84%;       
         }
 
-        /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only)
-           Triggers if screen is landscape BUT narrow (under 900px wide) */
+        /* MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only) */
         @media screen and (orientation: landscape) and (max-width: 900px) {
             #dropdown-anchor {
-                background-image: none !important; 
-                left: 15.5%;  /* Aligned over your wide background asset menu zone */
+                left: 15.5%;  
                 top: 11.5%;   
                 width: 32%;   
                 height: 6%; 
             }
-
             .iframe-container {
                 top: 51.5%;        
                 width: 92%;        
@@ -112,17 +105,14 @@
             }
         }
 
-        /* 3. TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets)
-           Triggers if the screen is wider than 901px regardless of orientation */
+        /* TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets) */
         @media screen and (min-width: 901px) {
             #dropdown-anchor {
-                background-image: none !important; 
-                left: 13.5%;  /* Aligned over your wide background asset menu zone */
+                left: 13.5%;  
                 top: 10.5%;    
                 width: 30%;   
                 height: 6%; 
             }
-
             .iframe-container {
                 top: 48.5%;        
                 width: 90%;        
@@ -136,6 +126,13 @@
             height: 100%;
             border: none; 
             background: transparent; 
+        }
+
+        /* Force option menu items styling to drop down cleanly beneath overlay layer */
+        #dropdown-anchor select option {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            font-weight: normal !important;
         }
     </style>
 </head>
@@ -163,7 +160,6 @@
     <script src="./image_dropdown.js"></script>
     
     <script>
-        // Responsive resizing code is offloaded to the CSS layout engine to prevent lag shifts
         window.addEventListener('DOMContentLoaded', () => {
             const pageMenuConfig = [
                 { title: "About Me",  filename: "./about_me.html" },
@@ -171,6 +167,9 @@
                 { title: "Ink Drawings",  filename: "./ink_drawings.html" }
             ];
 
+            // FIXED INITIALIZATION: 
+            // By keeping the anchor box positioned precisely using CSS percentages above, 
+            // we pass 0, 0 offsets here to let the script center its overlay layers perfectly inside it.
             new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>
