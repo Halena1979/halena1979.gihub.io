@@ -54,8 +54,8 @@
             z-index: 1;
         }
 
-        /* 4. WIDESCREEN ASPECT FLIP: Changes the container shape when screen is wide */
-        @media (min-width: 768px), screen and (orientation: landscape) {
+        /* 4. WIDESCREEN ASPECT FLIP: Changes the container shape when screen is wide or turned landscape */
+        @media (min-width: 901px), screen and (orientation: landscape) {
             .artwork-canvas {
                 aspect-ratio: 1920 / 1080; /* Flips the container box to match your wide image */
             }
@@ -66,14 +66,13 @@
            All percentages below track the raw image bounds natively
            ======================================================== */
 
-        /* Mobile Narrow Layout Placements */
+        /* 1. DEFAULT MOBILE NARROW VIEW */
         #dropdown-anchor {
             position: absolute;
             z-index: 20;   
             container-type: inline-size; 
             transform: translate(-50%, -50%);
             
-            /* Tweak these for Mobile Narrow */
             top: 3.5%; 
             left: 13.25%;
             width: 26%;  
@@ -86,62 +85,45 @@
             transform: translate(-50%, -50%);
             left: 50%;
             
-            /* Tweak these for Mobile Narrow */
             top: 53%;
             width: 60%; 
-            height: 65%; /* Lower this percentage if the iframe leaks out the bottom on mobile */
+            height: 65%; 
         }
 
-       /* =============================================================
-   2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways)
-   Triggers if the screen is horizontal AND narrow (under 900px)
-   ============================================================= */
-@media screen and (orientation: landscape) and (max-width: 900px) {
-    .artwork-canvas {
-        aspect-ratio: 1920 / 1080; /* Displays your wide desktop background */
-        background-image: url('main_background_wide.png');
-    }
+        /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only)
+           Triggers if screen is landscape BUT narrow (under 900px wide) */
+        @media screen and (orientation: landscape) and (max-width: 900px) {
+            #dropdown-anchor {
+                left: 15.5%;  /* Adjust independently for rotated phone screen view */
+                top: 11.5%;   
+                width: 24%;   
+                height: 6%; 
+            }
 
-    #dropdown-anchor {
-        /* ADJUST THESE FOR MOBILE LANDSCAPE: */
-        /* Since it is drifting too far left, INCREASE this number slightly */
-        left: 15.5%;  /* 👈 Try 15.5% or 16% to push it back to the RIGHT */
-        top: 11.5%;   /* Adjust to move the menu box up or down */
-        width: 24%;   
-        height: 6%; 
-    }
+            .iframe-container {
+                top: 55%;
+                width: 55%;
+                height: 53%; 
+            }
+        }
 
-    .iframe-container {
-        top: 55%;
-        width: 55%;
-        height: 53%; /* Scaled down slightly for tight mobile landscape windows */
-    }
-}
+        /* 3. TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets)
+           Triggers if the screen is wider than 901px regardless of orientation */
+        @media screen and (min-width: 901px) {
+            #dropdown-anchor {
+                /* Your working desktop parameters that look good */
+                left: 13.5%;   
+                top: 10.5%;    
+                width: 22%;   
+                height: 6%; 
+            }
 
-/* =============================================================
-   3. TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets)
-   Triggers if the screen is wider than 901px
-   ============================================================= */
-@media screen and (min-width: 901px) {
-    .artwork-canvas {
-        aspect-ratio: 1920 / 1080;
-        background-image: url('main_background_wide.png');
-    }
-
-    #dropdown-anchor {
-        /* Your working desktop parameters that look good */
-        left: 13.5%;   
-        top: 10.5%;    
-        width: 22%;   
-        height: 6%; 
-    }
-
-    .iframe-container {
-        top: 55%;     
-        width: 55%;   
-        height: 55%;  
-    }
-}
+            .iframe-container {
+                top: 55%;     
+                width: 55%;   
+                height: 55%;  
+            }
+        }
 
         /* Reset inner frame systems */
         .iframe-container iframe {
@@ -155,11 +137,7 @@
 <body>
 
     <div class="page-wrapper" id="page-wrapper1">
-        
-        <!-- The Locked Aspect Canvas Block -->
         <div class="artwork-canvas">
-            
-            <!-- Dynamic img tag replaces the old broken CSS background layout rules -->
             <img id="bg-image-element" src="main_background_narrow.png" class="canvas-bg-img" alt="Background">
 
             <div id="dropdown-anchor"></div>
@@ -167,29 +145,24 @@
             <div class="iframe-container">
                 <iframe src="welcome_video.html" name="content-frame" id="main_frame"></iframe>
             </div>
-            
         </div>
-
     </div>
 
     <script src="./image_dropdown.js"></script>
-    
     <script>
-        // Automatic Image Source Engine Switcher
         function updateResponsiveImageSource() {
             const imgElement = document.getElementById('bg-image-element');
             if (!imgElement) return;
 
-            const isWidescreen = window.innerWidth >= 768 || window.matchMedia("(orientation: landscape)").matches;
+            // Updated width parameter here to match our 901px CSS shift break point
+            const isWidescreen = window.innerWidth >= 901 || window.matchMedia("(orientation: landscape)").matches;
             const targetSrc = isWidescreen ? "main_background_wide.png" : "main_background_narrow.png";
 
-            // Swap source only if necessary to save performance rendering loops
             if (!imgElement.src.includes(targetSrc)) {
                 imgElement.src = targetSrc;
             }
         }
 
-        // Initialize background orientation monitors
         window.addEventListener('resize', updateResponsiveImageSource);
         window.addEventListener('DOMContentLoaded', () => {
             updateResponsiveImageSource();
@@ -203,6 +176,5 @@
             new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>
-
 </body>
 </html>
