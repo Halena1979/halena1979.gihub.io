@@ -62,20 +62,22 @@
         }
 
         /* ========================================================
-           COORDINATE GRID PLACEMENT BOXES
-           We now pass percentages directly to the JavaScript class
+           COORDINATE GRID TUNING KEYS
+           FIX: Removed 'transform: translate(-50%, -50%)' from anchor 
+           to stop it from clashing with the script's internal math.
            ======================================================== */
 
+        /* 1. DEFAULT MOBILE NARROW VIEW (Portrait Phone) */
         #dropdown-anchor {
             position: absolute;
             z-index: 20;   
-            transform: translate(-50%, -50%);
             
-            /* DEFAULT MOBILE NARROW VALUES */
-            top: 11.5%; 
-            left: 21.5%;
+            /* Pin the TOP-LEFT corner of the box exactly over the black rectangle */
+            top: 9%;         /* 👈 Adjusted to map top-left corner bounds */
+            left: 8.5%;      /* 👈 Adjusted to map top-left corner bounds */
             width: 26%;  
             height: 5%; 
+            white-space: nowrap; 
         }
 
         .iframe-container {
@@ -90,14 +92,16 @@
             height: 84%;       
         }
 
-        /* MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only) */
+        /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only) */
         @media screen and (orientation: landscape) and (max-width: 900px) {
             #dropdown-anchor {
-                left: 15.5%;  
-                top: 11.5%;   
+                background-image: none !important; 
+                top: 7.5%;     /* 👈 Top-left corner override for wide mobile asset */
+                left: -0.5%;   /* 👈 Top-left corner override for wide mobile asset */
                 width: 32%;   
                 height: 6%; 
             }
+
             .iframe-container {
                 top: 51.5%;        
                 width: 92%;        
@@ -105,14 +109,16 @@
             }
         }
 
-        /* TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets) */
+        /* 3. TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets) */
         @media screen and (min-width: 901px) {
             #dropdown-anchor {
-                left: 13.5%;  
-                top: 10.5%;    
+                background-image: none !important; 
+                top: 7.5%;     /* 👈 Top-left corner override for widescreen desktop asset */
+                left: -1.5%;   /* 👈 Top-left corner override for widescreen desktop asset */
                 width: 30%;   
                 height: 6%; 
             }
+
             .iframe-container {
                 top: 48.5%;        
                 width: 90%;        
@@ -128,7 +134,7 @@
             background: transparent; 
         }
 
-        /* Force option menu items styling to drop down cleanly beneath overlay layer */
+        /* Force option menu text styling to render legibly */
         #dropdown-anchor select option {
             background-color: #ffffff !important;
             color: #000000 !important;
@@ -167,9 +173,8 @@
                 { title: "Ink Drawings",  filename: "./ink_drawings.html" }
             ];
 
-            // FIXED INITIALIZATION: 
-            // By keeping the anchor box positioned precisely using CSS percentages above, 
-            // we pass 0, 0 offsets here to let the script center its overlay layers perfectly inside it.
+            // Instantiates your menu layer with 0, 0 offsets.
+            // The script will now handle centering the text perfectly inside our box bounds!
             new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>
