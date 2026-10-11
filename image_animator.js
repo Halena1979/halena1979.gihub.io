@@ -114,7 +114,7 @@ export class ImageAnimator {
         `;
 
         this._images.forEach((src, index) => {
-            const filename = src.split('/').pop().replace(/\.[^/.]+\$/, "");
+            const filename = src.split('/').pop().replace(/\.[^/.]+$/, "");
 
             const slide = document.createElement('div');
             slide.className = `anim-slide-${index}`;
