@@ -85,10 +85,10 @@
             transform: translate(-50%, -50%);
             left: 50%;
             
-            /* --- TUNING: MOBILE PORTRAIT NARROW IFRAME --- */
-            top: 45%;          /* 👈 ADJUSTED: Shifted up from 50% to expand upward */
-            width: 96%;        /* 👈 ADJUSTED: Stretched from 92% to capture side space */
-            height: 74%;       /* 👈 ADJUSTED: Increased from 68% to fill total vertical window space */
+            /* --- FINAL MAXIMUM TUNING: MOBILE PORTRAIT NARROW IFRAME --- */
+            top: 48%;          /* 👈 ADJUSTED: Pushed center point down to balance the large height boost */
+            width: 98%;        /* 👈 MAXIMIZED: Expanded horizontally to fill extra side padding */
+            height: 84%;       /* 👈 MAXIMIZED: Increased from 74% to aggressively consume top/bottom gaps */
         }
 
         /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only)
@@ -103,10 +103,10 @@
             }
 
             .iframe-container {
-                /* --- TUNING: MOBILE LANDSCAPE WIDE IFRAME --- */
-                top: 49.5%;        /* 👈 ADJUSTED: Lifted up from 52% to pull away from the bottom border */
-                width: 90%;        
-                height: 54%;       /* 👈 ADJUSTED: Decreased from 58% to safely remove bottom overlap */
+                /* --- FINAL MAXIMUM TUNING: MOBILE LANDSCAPE WIDE IFRAME --- */
+                top: 51.5%;        /* 👈 ADJUSTED: Shifted up slightly to close the upper text gap */
+                width: 92%;        /* 👈 MAXIMIZED: Slight increase to safely expand wide margins */
+                height: 58%;       /* 👈 MAXIMIZED: Increased from 54% to consume leftover vertical space */
             }
         }
 
@@ -122,10 +122,10 @@
             }
 
             .iframe-container {
-                /* --- TUNING: DESKTOP WIDESCREEN IFRAME --- */
-                top: 48%;          /* 👈 ADJUSTED: Shifted up from 51.5% to fill upper space */
-                width: 88%;        
-                height: 65%;       /* 👈 ADJUSTED: Increased from 60% to expand total height size */
+                /* --- FINAL MAXIMUM TUNING: DESKTOP WIDESCREEN IFRAME --- */
+                top: 49.5%;        /* 👈 ADJUSTED: Shifted slightly upward to fill the "Welcome!" text gap */
+                width: 90%;        /* 👈 MAXIMIZED: Slight increase to utilize extra side buffer space */
+                height: 69%;       /* 👈 MAXIMIZED: Stretched from 65% to completely fill top-to-bottom boundaries */
             }
         }
 
@@ -142,7 +142,7 @@
 
     <div class="page-wrapper" id="page-wrapper1">
         
-        <!-- The Locked Aspect Canvas Block -->
+        <!-- The Locked Aspect Canvas Box -->
         <div class="artwork-canvas">
             
             <!-- Dynamic img tag handles rendering natively across all viewports -->
