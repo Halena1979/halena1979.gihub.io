@@ -86,9 +86,9 @@
             left: 50%;
             
             /* --- TUNING: MOBILE PORTRAIT NARROW IFRAME --- */
-            top: 52.5%;        /* Centering anchor adjustment */
-            width: 86%;        /* 👈 EXPANDED: Widened from 60% to push outward */
-            height: 72%;       /* 👈 EXPANDED: Stretched from 65% to fill vertically */
+            top: 50%;          /* 👈 LOWERED: Pulled up from 52.5% to lift off the bottom */
+            width: 92%;        /* 👈 INCREASED: Widened from 86% to expand into side room */
+            height: 68%;       /* 👈 DECREASED: Shrunk from 72% to prevent bottom overlap */
         }
 
         /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only)
@@ -104,9 +104,9 @@
 
             .iframe-container {
                 /* --- TUNING: MOBILE LANDSCAPE WIDE IFRAME --- */
-                top: 55.5%;    /* Position alignment tweak */
-                width: 82%;    /* 👈 EXPANDED: Widened from 55% to clear internal margins */
-                height: 64%;   /* 👈 EXPANDED: Maximized vertical height for short viewports */
+                top: 52%;          /* 👈 LOWERED: Pulled up from 55.5% to lift off the bottom */
+                width: 90%;        /* 👈 INCREASED: Widened from 82% to expand into side room */
+                height: 58%;       /* 👈 DECREASED: Shrunk from 64% to prevent bottom overlap */
             }
         }
 
@@ -123,9 +123,9 @@
 
             .iframe-container {
                 /* --- TUNING: DESKTOP WIDESCREEN IFRAME --- */
-                top: 55%;      /* Centered vertical frame lock */
-                width: 80%;    /* 👈 EXPANDED: Widened from 55% to consume the graphic white box */
-                height: 66%;   /* 👈 EXPANDED: Stretched from 55% to hit edge margins cleanly */
+                top: 51.5%;        /* 👈 LOWERED: Pulled up from 55% to lift off the bottom */
+                width: 88%;        /* 👈 INCREASED: Widened from 80% to expand into side room */
+                height: 60%;       /* 👈 DECREASED: Shrunk from 66% to prevent bottom overlap */
             }
         }
 
@@ -142,7 +142,7 @@
 
     <div class="page-wrapper" id="page-wrapper1">
         
-        <!-- The Locked Aspect Canvas Block -->
+        <!-- The Locked Aspect Canvas Box -->
         <div class="artwork-canvas">
             
             <!-- Dynamic img tag handles rendering natively across all viewports -->
