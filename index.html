@@ -55,42 +55,73 @@
 
         /* All absolute elements below are now locked strictly to the image edges instead of the screen monitor */
 
-        .iframe-container {
-            width: 60%; 
-            height: 65%;
-            
-            position: absolute;
-            top: 53%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            
-            z-index: 10; 
-            overflow: hidden;
-            border: none;
-            outline: none;
-            box-shadow: none;
-            border-radius: 0;
-            background: transparent; 
-        }
-
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none; 
-            background: transparent; 
-        }
-
         #dropdown-anchor {
-            position: absolute;
-            top: 11%; 
-            left: 21.5%;
-            transform: translate(-50%, -50%);
-            
-            width: 26%;  
-            height: 5%; 
-            z-index: 20;   
-            container-type: inline-size; 
-        }
+    position: absolute;
+    z-index: 20;   
+    container-type: inline-size; 
+    transform: translate(-50%, -50%);
+    
+    /* ADJUST THESE FOR MOBILE: Placement of the black rectangle */
+    top: 11%;          /* Vertical position from the top edge */
+    left: 21.5%;       /* Horizontal position from the left edge */
+    width: 26%;        /* Width of the menu bounding box */
+    height: 5%;        /* Height of the menu bounding box */
+}
+
+.iframe-container {
+    position: absolute;
+    z-index: 10; 
+    overflow: hidden;
+    border: none;
+    outline: none;
+    background: transparent; 
+    transform: translate(-50%, -50%);
+    left: 50%;         /* Keeps the frame horizontally centered */
+    
+    /* ADJUST THESE FOR MOBILE: Proportions of your whitespace box */
+    top: 53%;          /* Vertical position of the iframe's center point */
+    width: 60%;        /* Width of the iframe box */
+    height: 65%;       /* Height of the iframe box (lower this if it leaks out the bottom) */
+}
+
+.iframe-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none; 
+    background: transparent; 
+}
+
+
+/* ==========================================
+   2. DESKTOP CONFIGURATION (Widescreen)
+   Adjust these values for your "_wide" image 
+   ========================================== */
+
+@media (min-width: 768px), screen and (orientation: landscape) {
+    .artwork-canvas {
+        aspect-ratio: 1920 / 1080; 
+        background-image: url('main_background_wide.png'); 
+        background-size: contain; 
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    /* OVERRIDE COORDINATES SPECIFICALLY FOR THE DESKTOP GRAPHIC */
+    #dropdown-anchor {
+        /* Tweak these until it lands dead-center over the wide image's black rectangle */
+        top: 15%;      /* Change this percentage to move it up or down on desktop */
+        left: 18%;     /* Change this percentage to move it left or right on desktop */
+        width: 22%;    /* Desktop width mapping adjustments */
+        height: 6%;    /* Desktop height mapping adjustments */
+    }
+
+    .iframe-container {
+        /* Tweak these until it cleanly sits inside the wide image's whitespace box */
+        top: 55%;      /* Vertical center point on desktop */
+        width: 55%;    /* Shrink this percentage if it bleeds left/right on desktop */
+        height: 58%;   /* LOWER THIS PERCENTAGE if your iframe text overlaps the image bottom */
+    }
+}
     </style>
 </head>
 <body>
