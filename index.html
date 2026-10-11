@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="light">
     <title>Originals by Halena</title>
 
-    <!-- Cache Busting Tags: Overrides local device memory to load fresh changes instantly -->
+    <!-- Cache Busting Tags: Forces modern browser apps to fetch fresh code layouts immediately -->
     <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
     <meta http-equiv="expires" content="0">
     <meta http-equiv="pragma" content="no-cache">
@@ -45,7 +45,7 @@
             max-height: 100%;
         }
 
-        /* 3. The true background graphic layer */
+        /* 3. The true background graphic player engine setup */
         .canvas-bg-img {
             position: relative; 
             display: block;
@@ -68,18 +68,18 @@
 
         /* ========================================================
            COORDINATE GRID TUNING KEYS
-           All percentages below track the raw image bounds natively
+           FIXED: Removed 'transform: translate' entirely to stop 
+           clashing with the script's internal positioning formulas.
            ======================================================== */
 
         /* 1. DEFAULT MOBILE NARROW VIEW (Portrait Phone) */
         #dropdown-anchor {
             position: absolute;
-            z-index: 100; /* Keeps dropdown layers positioned safely ABOVE the background image */  
-            transform: translate(-50%, -50%);
+            z-index: 100; /* High z-index forces the text layers safely above the background image */
             
-            /* Pin the center point directly over the mobile black menu rectangle */
-            top: 11.5%; 
-            left: 21.5%;
+            /* Pin the TOP-LEFT corner of the box over your mobile black menu rectangle */
+            top: 9.0%; 
+            left: 8.5%;
             width: 26%;  
             height: 5%; 
         }
@@ -90,7 +90,7 @@
             transform: translate(-50%, -50%);
             left: 50%;
             
-            /* Pushes up safely to clear your portrait bottom border lines */
+            /* Aligned to clear the bottom border lines cleanly */
             top: 48.5%;          
             width: 98%;        
             height: 84%;       
@@ -99,9 +99,9 @@
         /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only) */
         @media screen and (orientation: landscape) and (max-width: 900px) {
             #dropdown-anchor {
-                background-image: none !important; 
-                left: 15.5%;  /* Center point over the landscape black menu box */
-                top: 11.5%;   
+                /* Pin the TOP-LEFT corner over your horizontal mobile black rectangle */
+                top: 7.5%;     
+                left: -0.5%;   
                 width: 32%;   
                 height: 6%; 
             }
@@ -116,9 +116,9 @@
         /* 3. TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets) */
         @media screen and (min-width: 901px) {
             #dropdown-anchor {
-                background-image: none !important; 
-                left: 13.5%;  /* Center point over the widescreen desktop menu box */
-                top: 10.5%;    
+                /* Pin the TOP-LEFT corner over your desktop widescreen black rectangle */
+                top: 7.5%;     
+                left: -1.5%;   
                 width: 30%;   
                 height: 6%; 
             }
@@ -177,7 +177,7 @@
                 { title: "Ink Drawings",  filename: "./ink_drawings.html" }
             ];
 
-            // Instantiates your unchanged script module with its original 0,0 offsets
+            // Instantiates your shared script file
             new ImageDropdown('dropdown-anchor', 'main_frame', pageMenuConfig, 'Choose a Page...',  0, 0 );
         });
     </script>
