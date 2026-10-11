@@ -8,6 +8,36 @@ export class ImageAnimator {
         this._filename_caption = filename_caption;
     } 
 
+    /**
+     * Silent Internal Image Preloader
+     * Loops through your asset strings, feeds them to browser thread download caches,
+     * and maps a Promise engine that resolves only when all files hit 100% download.
+     */
+    preloadImages(filelist) {
+        // Show a clean visual fallback message inside your frame layout box while downloading
+        if (this.container) {
+            this.container.innerHTML = `
+                <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%; height:100%; font-family:'Montserrat',sans-serif; font-weight:bold; font-size:16px; color:#555555;">
+                    <div>Loading Gallery...</div>
+                </div>
+            `;
+        }
+
+        const promises = filelist.map(src => {
+            return new Promise((resolve, reject) => {
+                const imgCache = new Image();
+                imgCache.src = src; // 🚀 Download natively right to browser device storage context
+                imgCache.onload = () => resolve(src);
+                imgCache.onerror = () => {
+                    console.error(`Gallery loader failed to fetch asset target: ${src}`);
+                    resolve(src); // Soft resolve so one broken file path doesn't crash the whole slider
+                };
+            });
+        });
+
+        return Promise.all(promises);
+    }
+
     buildAnimation() {
         if (!this.container) return;
 
@@ -31,7 +61,6 @@ export class ImageAnimator {
 
             keyframesCSS += `
                 @keyframes slide-fade-loop-${index} { 
-                    /* 1. Stay offscreen right and invisible until its turn starts */
                     0%, ${p1}% { 
                         opacity: 0; 
                         mix-blend-mode: normal;
@@ -40,7 +69,6 @@ export class ImageAnimator {
                         filter: blur(15px);
                         z-index: 1;
                     }
-                    /* 2. Entrance window: Glides from right and fades in */
                     ${p2}% { 
                         opacity: 1; 
                         mix-blend-mode: normal;
@@ -49,7 +77,6 @@ export class ImageAnimator {
                         filter: blur(0px);
                         z-index: 10;
                     }
-                    /* 3. Solid Center Hold Phase */
                     ${p3}% { 
                         opacity: 1; 
                         mix-blend-mode: normal;
@@ -58,7 +85,6 @@ export class ImageAnimator {
                         filter: blur(0px);   
                         z-index: 10;
                     }
-                    /* 4. Exit Phase: Fades straight down to invisible at center */
                     ${p4}%, 100% { 
                         opacity: 0; 
                         mix-blend-mode: normal;
@@ -85,7 +111,7 @@ export class ImageAnimator {
         `;
 
         this._images.forEach((src, index) => {
-            const filename = src.split('/').pop().replace(/\.[^/.]+$/, "");
+            const filename = src.split('/').pop().replace(/\.[^/.]+\$/, "");
 
             const slide = document.createElement('div');
             slide.className = `anim-slide-${index}`;
@@ -107,14 +133,18 @@ export class ImageAnimator {
             note.style.marginBottom = '10px';
             note.style.fontSize = 'clamp(11px, 1.8cqi, 16px)';
             note.style.fontStyle = 'italic';
-            note.style.fontWeight = 'bold'
+            note.style.fontWeight = 'bold';
             note.style.color = '#555555'; 
-            note.style.fontFamily = 'Montserrat';
+            note.style.fontFamily = 'Montserrat, sans-serif';
             note.style.textAlign = 'center';
             note.style.flexShrink = '0'; 
 
             const img = document.createElement('img');
-            img.src = src + '?t=' + Date.now();
+            
+            // FIX: Removed the timestamp string '?t=' block! 
+            // Letting the browser pull directly from its native cache lets images paint instantly.
+            img.src = src; 
+            
             img.style.width = '100%';
             img.style.height = '100%';
             img.style.minHeight = '0'; 
@@ -130,10 +160,9 @@ export class ImageAnimator {
             caption.textContent = filename.replaceAll("_", " ");
             caption.style.marginTop = '15px';
             caption.style.fontSize = 'clamp(16px, 3.8cqi, 42px)'; 
-            caption.style.fontFamily = 'Montserrat';
             caption.style.fontWeight = 'bold';
             caption.style.color = '#000000'; 
-            caption.style.fontFamily = 'sans-serif';
+            caption.style.fontFamily = 'Montserrat, sans-serif';
             caption.style.textAlign = 'center';
             caption.style.width = '100%';
             caption.style.flexShrink = '0'; 
@@ -159,8 +188,12 @@ export class ImageAnimator {
 
     set images(filelist) { 
         if (!Array.isArray(filelist) || filelist.length === 0) return;
-        this._images = filelist;
-        this.buildAnimation();
+        
+        // 🚀 ACTIVATE INTERCEPT LOOPER: Download everything first, then trigger buildAnimation!
+        this.preloadImages(filelist).then((completedList) => {
+            this._images = completedList;
+            this.buildAnimation();
+        });
     }
 
     get fade_in_time() { return this._fade_in_time; }
