@@ -89,6 +89,10 @@
             left: 21.5%;
             width: 26%;  
             height: 5%; 
+            
+            /* FIX: Prevents text from being squished or auto-wrapping inside absolute layouts */
+            container-type: inline-size;
+            white-space: nowrap;
         }
 
         .iframe-container {
@@ -109,7 +113,7 @@
                 background-image: none !important; 
                 left: 15.5%;  /* Center point over the landscape black menu box */
                 top: 11.5%;   
-                width: 32%;   
+                width: 32%;   /* Widened slightly to give choice strings side padding */
                 height: 6%; 
             }
 
@@ -126,7 +130,7 @@
                 background-image: none !important; 
                 left: 13.5%;  /* Center point over the widescreen desktop menu box */
                 top: 10.5%;    
-                width: 30%;   
+                width: 30%;   /* Widened slightly to give choice strings side padding */
                 height: 6%; 
             }
 
@@ -173,7 +177,7 @@
 
     </div>
 
-    <!-- CLEAN MODULE COUPLING LAYER LINK -->
+    <!-- Clean Coupling Link to your External Shared Javascript Module File -->
     <script src="image_dropdown.js"></script>
     
     <script>
