@@ -16,7 +16,7 @@
             overflow: hidden; /* Stops mobile layouts from jumping during window flips */
         }
 	
-        /* 1. This wrapper fills the screen, introduces a 50px padding margin, and centers our canvas */
+        /* 1. Outer viewport window wrapper that centers our graphic artwork structure */
         .page-wrapper {
             position: relative;
             width: 100vw;
@@ -27,44 +27,33 @@
             align-items: center;
             background-color: #D1D1D1;
             
-            /* FIX: Expanded from 30px to 50px to make the grey frame around your art look thicker */
+            /* Thicker grey padding frame edge buffer zone */
             padding: 50px; 
             box-sizing: border-box; 
         }
 
-        /* 2. THE CANVAS: Constrained perfectly using max-bounds to prevent distortion */
+        /* 2. THE CANVAS: Inherits dimensions natively from the active image file down below */
         .artwork-canvas {
             position: relative;
+            display: block;
             
-            /* Using 100% bounds allows absolute child containers to resolve widths correctly on mobile */
-            width: 100%;
-            height: 100%;
+            /* Max limits keep the container scale contained safely inside the 50px grey padding boundaries */
             max-width: 100%;
             max-height: 100%;
-            
-            /* DEFAULT NARROW ASPECT: Forces the parent container to map your mobile shape */
-            aspect-ratio: 1080 / 1920; 
-            display: block;
         }
 
-        /* 3. The true background element image layer */
+        /* 3. The true background graphic player engine setup */
         .canvas-bg-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            /* FIX: Changing to relative forces the parent container to automatically map its exact size */
+            position: relative; 
+            display: block;
             
-            /* Object-fit contain forces the inner image to scale natively without squishing */
-            object-fit: contain; 
+            /* Fluidly fills limits without stretching out of proportion */
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
             z-index: 1;
-        }
-
-        /* 4. WIDESCREEN ASPECT FLIP: Changes the container shape when screen is wide or turned landscape */
-        @media (min-width: 901px), screen and (orientation: landscape) {
-            .artwork-canvas {
-                aspect-ratio: 1920 / 1080; /* Flips the container box to match your wide image */
-            }
         }
 
         /* ========================================================
@@ -83,8 +72,6 @@
             left: 13.25%;
             width: 26%;  
             height: 5%; 
-            
-            /* Safeguards text from wrapping inside absolute layout boxes */
             white-space: nowrap; 
         }
 
@@ -94,7 +81,6 @@
             transform: translate(-50%, -50%);
             left: 50%;
             
-            /* --- FINAL MAXIMUM TUNING: MOBILE PORTRAIT NARROW IFRAME --- */
             top: 48%;          
             width: 98%;        
             height: 84%;       
@@ -112,7 +98,6 @@
             }
 
             .iframe-container {
-                /* --- FINAL MAXIMUM TUNING: MOBILE LANDSCAPE WIDE IFRAME --- */
                 top: 51.5%;        
                 width: 92%;        
                 height: 58%;       
@@ -131,7 +116,6 @@
             }
 
             .iframe-container {
-                /* --- FINAL MAXIMUM TUNING: DESKTOP WIDESCREEN IFRAME --- */
                 top: 49.5%;        
                 width: 90%;        
                 height: 69%;       
@@ -151,10 +135,10 @@
 
     <div class="page-wrapper" id="page-wrapper1">
         
-        <!-- The Locked Aspect Canvas Box -->
+        <!-- The Balanced Coordinate Canvas Container Block -->
         <div class="artwork-canvas">
             
-            <!-- Dynamic img tag handles rendering natively across all viewports -->
+            <!-- Dynamic img tag establishes visual scale constraints natively -->
             <img id="bg-image-element" src="main_background_narrow.png" class="canvas-bg-img" alt="Background">
 
             <div id="dropdown-anchor"></div>
