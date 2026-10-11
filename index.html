@@ -98,6 +98,7 @@
 
         /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only) */
         @media screen and (orientation: landscape) and (max-width: 900px) {
+            /* FIX: Changed dot class marker to an exact ID hash link selector */
             #dropdown-anchor {
                 background-image: none !important; 
                 left: 15.5%;  /* Center point over the landscape black menu box */
@@ -115,6 +116,7 @@
 
         /* 3. TRUE DESKTOP VIEW OVERRIDE (Large monitors & tablets) */
         @media screen and (min-width: 901px) {
+            /* FIX: Changed dot class marker to an exact ID hash link selector */
             #dropdown-anchor {
                 background-image: none !important; 
                 left: 13.5%;  /* Center point over the widescreen desktop menu box */
@@ -156,6 +158,7 @@
             <!-- Background element graphic loads its responsive files using pure CSS rules now -->
             <img id="bg-image-element" class="canvas-bg-img" alt="Background">
 
+            <!-- Core Target Container Box Pointer Asset Link node -->
             <div id="dropdown-anchor"></div>
       
             <div class="iframe-container">
