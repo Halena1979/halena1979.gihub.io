@@ -10,11 +10,10 @@ export class ImageAnimator {
 
     /**
      * Silent Internal Image Preloader
-     * Loops through your asset strings, feeds them to browser thread download caches,
+     * Loops through asset strings, feeds them to browser thread download caches,
      * and maps a Promise engine that resolves only when all files hit 100% download.
      */
     preloadImages(filelist) {
-        // Show a clean visual fallback message inside your frame layout box while downloading
         if (this.container) {
             this.container.innerHTML = `
                 <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%; height:100%; font-family:'Montserrat',sans-serif; font-weight:bold; font-size:16px; color:#555555;">
@@ -24,13 +23,13 @@ export class ImageAnimator {
         }
 
         const promises = filelist.map(src => {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 const imgCache = new Image();
-                imgCache.src = src; // 🚀 Download natively right to browser device storage context
+                imgCache.src = src; 
                 imgCache.onload = () => resolve(src);
                 imgCache.onerror = () => {
                     console.error(`Gallery loader failed to fetch asset target: ${src}`);
-                    resolve(src); // Soft resolve so one broken file path doesn't crash the whole slider
+                    resolve(src); 
                 };
             });
         });
@@ -42,8 +41,8 @@ export class ImageAnimator {
         if (!this.container) return;
 
         const count = this.images.length;
-        const singleDuration = this.hold_time + this.fade_in_time + this.fade_out_time; // 12s
-        const totalDuration = singleDuration * count; // 120s
+        const singleDuration = this.hold_time + this.fade_in_time + this.fade_out_time; 
+        const totalDuration = singleDuration * count; 
         
         const fade_in_pct = (this.fade_in_time / totalDuration) * 100;
         const hold_pct = (this.hold_time / totalDuration) * 100;
@@ -61,14 +60,16 @@ export class ImageAnimator {
 
             keyframesCSS += `
                 @keyframes slide-fade-loop-${index} { 
+                    /* FIX: Kept visibility: visible here to force the browser to pre-decode pixels */
                     0%, ${p1}% { 
                         opacity: 0; 
                         mix-blend-mode: normal;
-                        visibility: hidden; 
+                        visibility: visible; 
                         transform: translate(100%, 0) scale(1.05); 
                         filter: blur(15px);
                         z-index: 1;
                     }
+                    /* Entrance window */
                     ${p2}% { 
                         opacity: 1; 
                         mix-blend-mode: normal;
@@ -77,6 +78,7 @@ export class ImageAnimator {
                         filter: blur(0px);
                         z-index: 10;
                     }
+                    /* Center Hold Phase */
                     ${p3}% { 
                         opacity: 1; 
                         mix-blend-mode: normal;
@@ -85,10 +87,11 @@ export class ImageAnimator {
                         filter: blur(0px);   
                         z-index: 10;
                     }
+                    /* Exit Phase */
                     ${p4}%, 100% { 
                         opacity: 0; 
                         mix-blend-mode: normal;
-                        visibility: hidden; 
+                        visibility: visible; 
                         transform: translate(0, 0) scale(1.05); 
                         filter: blur(15px);
                         z-index: 1;
@@ -140,11 +143,7 @@ export class ImageAnimator {
             note.style.flexShrink = '0'; 
 
             const img = document.createElement('img');
-            
-            // FIX: Removed the timestamp string '?t=' block! 
-            // Letting the browser pull directly from its native cache lets images paint instantly.
             img.src = src; 
-            
             img.style.width = '100%';
             img.style.height = '100%';
             img.style.minHeight = '0'; 
@@ -189,7 +188,6 @@ export class ImageAnimator {
     set images(filelist) { 
         if (!Array.isArray(filelist) || filelist.length === 0) return;
         
-        // 🚀 ACTIVATE INTERCEPT LOOPER: Download everything first, then trigger buildAnimation!
         this.preloadImages(filelist).then((completedList) => {
             this._images = completedList;
             this.buildAnimation();
