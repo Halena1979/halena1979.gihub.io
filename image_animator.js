@@ -106,7 +106,11 @@ export class ImageAnimator {
             const filename = src.split('/').pop().replace(/\.[^/.]+$/, "");
             const slide = document.createElement('div');
             slide.className = `anim-slide-${index}`;
-            slide.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; box-sizing:border-box; padding:20px;';
+            slide.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; box-sizing:border-box; padding:20px;';
+
+            // FIXED: Added width: 100% and flex-grow: 1 so it opens up to fill the whole display area
+            const contentBlock = document.createElement('div');
+            contentBlock.style.cssText = 'display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%; flex-grow:1; max-width:100%; max-height:100%; box-sizing:border-box;';
 
             const controlRow = document.createElement('div');
             controlRow.style.cssText = 'display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:10px; width:100%; flex-shrink:0; user-select:none;';
@@ -131,16 +135,19 @@ export class ImageAnimator {
 
             const img = document.createElement('img');
             img.src = src; 
-            img.style.cssText = 'width:100%; height:100%; min-height:0; flex-grow:1; object-fit:contain; cursor:pointer;'; 
+            // FIXED: Set to flex-grow:1 and max-height:100% to let the image naturally scale as large as the parent frame permits
+            img.style.cssText = 'width:100%; height:100%; min-height:0; flex-grow:1; object-fit:contain; cursor:pointer; display:block;'; 
             img.addEventListener('click', () => { this.container.classList.toggle('paused'); });
 
             const caption = document.createElement('div');
             caption.textContent = filename.replaceAll("_", " ");
-            caption.style.cssText = 'margin-top:10px; margin-bottom:10px; font-size:clamp(16px, 3.8cqi, 42px); font-weight:bold; color:#000000; font-family:Montserrat,sans-serif; text-align:center; width:100%; flex-shrink:0;'; 
+            caption.style.cssText = 'margin-top:10px; font-size:clamp(16px, 3.8cqi, 42px); font-weight:bold; color:#000000; font-family:Montserrat,sans-serif; text-align:center; width:100%; flex-shrink:0;'; 
 
-            slide.appendChild(controlRow);
-            slide.appendChild(img);
-            if (this._filename_caption) { slide.appendChild(caption); }
+            contentBlock.appendChild(controlRow);
+            contentBlock.appendChild(img);
+            if (this._filename_caption) { contentBlock.appendChild(caption); }
+            
+            slide.appendChild(contentBlock);
             this.container.appendChild(slide);
             
             styleRules += `.anim-slide-${index} { animation: slide-fade-loop-${index} ${totalDuration}s infinite linear; }`;
