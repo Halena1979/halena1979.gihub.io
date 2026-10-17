@@ -9,6 +9,9 @@ export class ImageAnimator {
         this.timeOffset = 0; 
     } 
 
+    /**
+     * Silent Internal Image Preloader
+     */
     preloadImages(filelist) {
         if (this.container) {
             this.container.innerHTML = `
@@ -21,10 +24,10 @@ export class ImageAnimator {
             return new Promise((resolve) => {
                 const imgCache = new Image();
                 imgCache.src = src; 
-                imgCache.onload = () => resolve({ src, width: imgCache.width, height: imgCache.height });
+                imgCache.onload = () => resolve(src);
                 imgCache.onerror = () => {
                     console.error(`Gallery loader failed to fetch asset target: ${src}`);
-                    resolve({ src, width: 4, height: 3 }); // Safe generic fallback aspect ratio
+                    resolve(src); 
                 };
             });
         });
@@ -85,10 +88,10 @@ export class ImageAnimator {
 
             keyframesCSS += `
                 @keyframes slide-fade-loop-${index} { 
-                    0%, ${p1}% { opacity: 0; mix-blend-mode: normal; visibility: visible; transform: translate(100%, 0) scale(1.05); filter: blur(15px); z-index: 1; }
-                    ${p2}% { opacity: 1; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1); filter: blur(0px); z-index: 10; }
-                    ${p3}% { opacity: 1; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1); filter: blur(0px); z-index: 10; }
-                    ${p4}%, 100% { opacity: 0; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1.05); filter: blur(15px); z-index: 1; }
+                    0%, ${p1}% { opacity: 0; mix-blend-mode: normal; visibility: hidden; transform: translate(100%, 0) scale(1.02); filter: blur(15px); }
+                    ${p2}% { opacity: 1; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1); filter: blur(0px); }
+                    ${p3}% { opacity: 1; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1); filter: blur(0px); }
+                    ${p4}%, 100% { opacity: 0; mix-blend-mode: normal; visibility: hidden; transform: translate(0, 0) scale(1.02); filter: blur(15px); }
                 }
             `;
         });
@@ -102,14 +105,19 @@ export class ImageAnimator {
             .nav-btn:active { color: #000000; transform: scale(0.85); }
         `;
 
-        this._images.forEach((imgData, index) => {
-            const filename = imgData.src.split('/').pop().replace(/\.[^/.]+$/, "");
+        this._images.forEach((src, index) => {
+            const urlParts = src.split('/');
+            const rawFilename = urlParts[urlParts.length - 1];
+            const lastDotIndex = rawFilename.lastIndexOf('.');
+            const cleanTitle = (lastDotIndex !== -1 ? rawFilename.substring(0, lastDotIndex) : rawFilename).replaceAll("_", " ");
+
+            // Structural full-screen anchor wrapper row
             const slide = document.createElement('div');
             slide.className = `anim-slide-${index}`;
-            slide.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; box-sizing:border-box; padding:20px;';
+            slide.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; box-sizing:border-box; padding:10px;';
 
             const controlRow = document.createElement('div');
-            controlRow.style.cssText = 'display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:10px; width:100%; flex-shrink:0; user-select:none;';
+            controlRow.style.cssText = 'display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:8px; width:100%; flex-shrink:0; user-select:none; z-index:20;';
 
             const prevBtn = document.createElement('button');
             prevBtn.className = 'nav-btn';
@@ -129,29 +137,21 @@ export class ImageAnimator {
             controlRow.appendChild(note);
             controlRow.appendChild(nextBtn);
 
-            // FIXED: Converted to a div wrapper utilizing a dynamic aspect ratio calculation captured during preloading
-            const imgCanvas = document.createElement('div');
-            imgCanvas.style.cssText = `
-                width: 100%;
-                max-width: 100%;
-                max-height: 70dvh;
-                aspect-ratio: ${imgData.width} / ${imgData.height};
-                background-image: url('${imgData.src}');
-                background-size: contain;
-                background-position: center;
-                background-repeat: no-repeat;
-                cursor: pointer;
-                display: block;
-            `; 
-            imgCanvas.addEventListener('click', () => { this.container.classList.toggle('paused'); });
-
-            const caption = document.createElement('div');
-            caption.textContent = filename.replaceAll("_", " ");
-            caption.style.cssText = 'margin-top:10px; font-size:clamp(16px, 3.8cqi, 42px); font-weight:bold; color:#000000; font-family:Montserrat,sans-serif; text-align:center; width:100%; flex-shrink:0;'; 
+            const img = document.createElement('img');
+            img.src = src; 
+            // FIXED: Standardized image layout constraints to fill the maximum remaining space without blowing out grid blocks
+            img.style.cssText = 'width:100%; height:100%; min-height:0; flex-grow:1; object-fit:contain; cursor:pointer; display:block; z-index:10; margin:0;'; 
+            img.addEventListener('click', () => { this.container.classList.toggle('paused'); });
 
             slide.appendChild(controlRow);
-            slide.appendChild(imgCanvas);
-            if (this._filename_caption) { slide.appendChild(caption); }
+            slide.appendChild(img);
+
+            if (this._filename_caption) {
+                const caption = document.createElement('div');
+                caption.textContent = cleanTitle;
+                caption.style.cssText = 'margin-top:8px; font-size:clamp(16px, 3.8cqi, 26px); font-weight:bold; color:#000000; font-family:Montserrat,sans-serif; text-align:center; width:100%; flex-shrink:0; z-index:20;'; 
+                slide.appendChild(caption);
+            }
             
             this.container.appendChild(slide);
             styleRules += `.anim-slide-${index} { animation: slide-fade-loop-${index} ${totalDuration}s infinite linear; }`;
