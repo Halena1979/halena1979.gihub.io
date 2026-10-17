@@ -81,14 +81,27 @@
             transform: translate(-50%, -50%);
             
             /* Pin the center point directly over the mobile black menu rectangle */
-            top: 3.65%; 
-            left: 14%;
+            --base-top: 3.65%;
+            --base-left: 14%;
+            top: var(--base-top);
+            left: var(--base-left);
             width: 26%;  
             height: 5%; 
             
             container-type: inline-size;
             white-space: nowrap;
+
+            
         }
+
+        /* 2. Dynamic aspect ratio adjustment for wider/shorter mobile screens (like 19.5:9) */
+            @media (max-aspect-ratio: 20/9) and (max-width: 480px) {
+                #dropdown-anchor {
+                    /* The image scales up to fill the horizontal width, which pushes the layout downward. 
+                    We use the scaling factor difference to shift the element down and adjust left positioning. */
+                    top: calc(var(--base-top) + 0.1dvh); 
+                    left: calc(var(--base-left) + 0.5dvw);
+                } }
 
         .iframe-container {
             position: absolute;
