@@ -6,13 +6,9 @@ export class ImageAnimator {
         this._hold_time = hold_time;
         this._fade_out_time = fade_out_time;
         this._filename_caption = filename_caption;
+        this.timeOffset = 0; 
     } 
 
-    /**
-     * Silent Internal Image Preloader
-     * Loops through asset strings, feeds them to browser thread download caches,
-     * and maps a Promise engine that resolves only when all files hit 100% download.
-     */
     preloadImages(filelist) {
         if (this.container) {
             this.container.innerHTML = `
@@ -21,7 +17,6 @@ export class ImageAnimator {
                 </div>
             `;
         }
-
         const promises = filelist.map(src => {
             return new Promise((resolve) => {
                 const imgCache = new Image();
@@ -33,13 +28,44 @@ export class ImageAnimator {
                 };
             });
         });
-
         return Promise.all(promises);
+    }
+
+    next() {
+        if (!this._images.length) return;
+        const singleDuration = this.hold_time + this.fade_in_time + this.fade_out_time;
+        const totalDuration = singleDuration * this._images.length;
+        this.container.classList.add('paused');
+        this.timeOffset -= singleDuration;
+        if (Math.abs(this.timeOffset) >= totalDuration) {
+            this.timeOffset = this.timeOffset % totalDuration;
+        }
+        this.applyManualTimeShift();
+    }
+
+    prev() {
+        if (!this._images.length) return;
+        const singleDuration = this.hold_time + this.fade_in_time + this.fade_out_time;
+        const totalDuration = singleDuration * this._images.length;
+        this.container.classList.add('paused');
+        this.timeOffset += singleDuration;
+        if (this.timeOffset > 0) {
+            this.timeOffset = -totalDuration + singleDuration;
+        }
+        this.applyManualTimeShift();
+    }
+
+    applyManualTimeShift() {
+        this._images.forEach((_, index) => {
+            const slide = this.container.querySelector(`.anim-slide-${index}`);
+            if (slide) {
+                slide.style.animationDelay = `${this.timeOffset}s`;
+            }
+        });
     }
 
     buildAnimation() {
         if (!this.container) return;
-
         const count = this.images.length;
         const singleDuration = this.hold_time + this.fade_in_time + this.fade_out_time; 
         const totalDuration = singleDuration * count; 
@@ -52,7 +78,6 @@ export class ImageAnimator {
         let keyframesCSS = '';
         this._images.forEach((_, index) => {
             const startDelay = index * single_pct;
-            
             const p1 = startDelay.toFixed(4);
             const p2 = (startDelay + fade_in_pct).toFixed(4);
             const p3 = (startDelay + fade_in_pct + hold_pct).toFixed(4);
@@ -60,113 +85,60 @@ export class ImageAnimator {
 
             keyframesCSS += `
                 @keyframes slide-fade-loop-${index} { 
-                    /* FIX: Kept visibility: visible here to force the browser to pre-decode pixels */
-                    0%, ${p1}% { 
-                        opacity: 0; 
-                        mix-blend-mode: normal;
-                        visibility: visible; 
-                        transform: translate(100%, 0) scale(1.05); 
-                        filter: blur(15px);
-                        z-index: 1;
-                    }
-                    /* Entrance window */
-                    ${p2}% { 
-                        opacity: 1; 
-                        mix-blend-mode: normal;
-                        visibility: visible; 
-                        transform: translate(0, 0) scale(1); 
-                        filter: blur(0px);
-                        z-index: 10;
-                    }
-                    /* Center Hold Phase */
-                    ${p3}% { 
-                        opacity: 1; 
-                        mix-blend-mode: normal;
-                        visibility: visible; 
-                        transform: translate(0, 0) scale(1); 
-                        filter: blur(0px);   
-                        z-index: 10;
-                    }
-                    /* Exit Phase */
-                    ${p4}%, 100% { 
-                        opacity: 0; 
-                        mix-blend-mode: normal;
-                        visibility: visible; 
-                        transform: translate(0, 0) scale(1.05); 
-                        filter: blur(15px);
-                        z-index: 1;
-                    }
+                    0%, ${p1}% { opacity: 0; mix-blend-mode: normal; visibility: visible; transform: translate(100%, 0) scale(1.05); filter: blur(15px); z-index: 1; }
+                    ${p2}% { opacity: 1; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1); filter: blur(0px); z-index: 10; }
+                    ${p3}% { opacity: 1; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1); filter: blur(0px); z-index: 10; }
+                    ${p4}%, 100% { opacity: 0; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1.05); filter: blur(15px); z-index: 1; }
                 }
             `;
         });
 
         this.container.innerHTML = '';
-        this.container.style.position = 'relative';
-        this.container.style.overflow = 'hidden'; 
-        this.container.style.width = '100%';
-        this.container.style.height = '100%';
-        this.container.style.boxSizing = 'border-box';
+        this.container.style.cssText = 'position:relative; overflow:hidden; width:100%; height:100%; box-sizing:border-box;';
         
         let styleRules = keyframesCSS + `
-            #${this.container.id}.paused * {
-                animation-play-state: paused !important;
-            }
+            #${this.container.id}.paused * { animation-play-state: paused !important; }
+            .nav-btn { background: none; border: none; color: #555555; font-family: Montserrat, sans-serif; font-size: clamp(14px, 2.2cqi, 20px); font-weight: bold; cursor: pointer; padding: 5px 12px; touch-action: manipulation; transition: color 0.15s ease, transform 0.1s ease; }
+            .nav-btn:active { color: #000000; transform: scale(0.85); }
         `;
 
         this._images.forEach((src, index) => {
             const filename = src.split('/').pop().replace(/\.[^/.]+$/, "");
-
             const slide = document.createElement('div');
             slide.className = `anim-slide-${index}`;
-            
-            slide.style.position = 'absolute';
-            slide.style.top = '0';
-            slide.style.left = '0';
-            slide.style.width = '100%';
-            slide.style.height = '100%';
-            slide.style.display = 'flex';
-            slide.style.flexDirection = 'column';
-            slide.style.alignItems = 'center';
-            slide.style.justifyContent = 'center';
-            slide.style.boxSizing = 'border-box';
-            slide.style.padding = '20px';
+            slide.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; box-sizing:border-box; padding:20px;';
+
+            const controlRow = document.createElement('div');
+            controlRow.style.cssText = 'display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:10px; width:100%; flex-shrink:0; user-select:none;';
+
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'nav-btn';
+            prevBtn.textContent = '◀';
+            prevBtn.addEventListener('click', (e) => { e.stopPropagation(); this.prev(); });
 
             const note = document.createElement('div');
             note.textContent = "Click image to pause/resume animation";
-            note.style.marginBottom = '10px';
-            note.style.fontSize = 'clamp(11px, 1.8cqi, 16px)';
-            note.style.fontStyle = 'italic';
-            note.style.fontWeight = 'bold';
-            note.style.color = '#555555'; 
-            note.style.fontFamily = 'Montserrat, sans-serif';
-            note.style.textAlign = 'center';
-            note.style.flexShrink = '0'; 
+            note.style.cssText = 'font-size:clamp(11px, 1.8cqi, 16px); font-style:italic; font-weight:bold; color:#555555; font-family:Montserrat,sans-serif; text-align:center;';
+
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'nav-btn';
+            nextBtn.textContent = '▶';
+            nextBtn.addEventListener('click', (e) => { e.stopPropagation(); this.next(); });
+
+            controlRow.appendChild(prevBtn);
+            controlRow.appendChild(note);
+            controlRow.appendChild(nextBtn);
 
             const img = document.createElement('img');
             img.src = src; 
-            img.style.width = '100%';
-            img.style.height = '100%';
-            img.style.minHeight = '0'; 
-            img.style.flexGrow = '1';
-            img.style.objectFit = 'contain'; 
-            img.style.cursor = 'pointer'; 
-
-            img.addEventListener('click', () => {
-                this.container.classList.toggle('paused');
-            });
+            img.style.cssText = 'width:100%; height:100%; min-height:0; flex-grow:1; object-fit:contain; cursor:pointer;'; 
+            img.addEventListener('click', () => { this.container.classList.toggle('paused'); });
 
             const caption = document.createElement('div');
             caption.textContent = filename.replaceAll("_", " ");
-            caption.style.marginTop = '15px';
-            caption.style.fontSize = 'clamp(16px, 3.8cqi, 42px)'; 
-            caption.style.fontWeight = 'bold';
-            caption.style.color = '#000000'; 
-            caption.style.fontFamily = 'Montserrat, sans-serif';
-            caption.style.textAlign = 'center';
-            caption.style.width = '100%';
-            caption.style.flexShrink = '0'; 
+            caption.style.cssText = 'margin-top:10px; margin-bottom:10px; font-size:clamp(16px, 3.8cqi, 42px); font-weight:bold; color:#000000; font-family:Montserrat,sans-serif; text-align:center; width:100%; flex-shrink:0;'; 
 
-            slide.appendChild(note);
+            slide.appendChild(controlRow);
             slide.appendChild(img);
             if (this._filename_caption) { slide.appendChild(caption); }
             this.container.appendChild(slide);
@@ -184,10 +156,8 @@ export class ImageAnimator {
     }
 
     get images() { return this._images; }
-
     set images(filelist) { 
         if (!Array.isArray(filelist) || filelist.length === 0) return;
-        
         this.preloadImages(filelist).then((completedList) => {
             this._images = completedList;
             this.buildAnimation();
