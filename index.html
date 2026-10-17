@@ -95,7 +95,7 @@
         }
 
         /* 2. Dynamic aspect ratio adjustment for wider/shorter mobile screens (like 19.5:9) */
-            @media (max-aspect-ratio: 20/9) and (max-width: 480px) {
+            @media screen and (orientation: portrait) and (max-width: 480px) {
                 #dropdown-anchor {
                     /* The image scales up to fill the horizontal width, which pushes the layout downward. 
                     We use the scaling factor difference to shift the element down and adjust left positioning. */
