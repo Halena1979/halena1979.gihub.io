@@ -1,11 +1,13 @@
 export class ImageAnimator {
-    constructor(containerId="slideshow", fade_in_time = 1, hold_time = 2, fade_out_time = 1, filename_caption = true) {
+    // Added transition_type parameter (0 = blur/fade, 1 = wipe down reveal/wipe up hide)
+    constructor(containerId="slideshow", fade_in_time = 1, hold_time = 2, fade_out_time = 1, filename_caption = true, transition_type = 0) {
         this._images = [];
         this.container = document.getElementById(containerId);
         this._fade_in_time = fade_in_time;
         this._hold_time = hold_time;
         this._fade_out_time = fade_out_time;
         this._filename_caption = filename_caption;
+        this._transition_type = transition_type; // Store transition configuration
         this.timeOffset = 0; 
     } 
 
@@ -86,14 +88,44 @@ export class ImageAnimator {
             const p3 = (startDelay + fade_in_pct + hold_pct).toFixed(4);
             const p4 = (startDelay + fade_in_pct + hold_pct + fade_out_pct).toFixed(4);
 
-            keyframesCSS += `
-                @keyframes slide-fade-loop-${index} { 
-                    0%, ${p1}% { opacity: 0; mix-blend-mode: normal; visibility: hidden; transform: translate(100%, 0) scale(1.02); filter: blur(15px); }
-                    ${p2}% { opacity: 1; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1); filter: blur(0px); }
-                    ${p3}% { opacity: 1; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1); filter: blur(0px); }
-                    ${p4}%, 100% { opacity: 0; mix-blend-mode: normal; visibility: hidden; transform: translate(0, 0) scale(1.02); filter: blur(15px); }
-                }
-            `;
+             const p3_mid = (startDelay + fade_in_pct + hold_pct + (fade_out_pct * 0.4)).toFixed(4);
+            
+            const p4a = (startDelay + fade_in_pct + hold_pct + fade_out_pct).toFixed(4);
+
+            if (this._transition_type === 1) {
+                // Option 1: Top-to-bottom Wipe Reveal, Bottom-to-top Wipe Hide
+                // clip-path: inset(top right bottom left) specifies the hidden boundaries
+                keyframesCSS += `
+                    @keyframes slide-fade-loop-${index} { 
+                        0%, ${p1}% { visibility: hidden; clip-path: inset(0 0 100% 0); animation-timing-function: ease-in-out;}
+                        ${p2}% { visibility: visible; clip-path: inset(0 0 0% 0); animation-timing-function: linear;}
+                        ${p3}% { visibility: visible; clip-path: inset(0 0 0% 0); animation-timing-function: ease-in-out; }
+                        ${p4}%, 100% { visibility: hidden; clip-path: inset(0 0 100% 0); }
+                    }
+                `;
+            } 
+            else if (this._transition_type === 2) {
+                // Option 2: Fade In Reveal ➔ Hold ➔ Bottom-to-top Wipe Hide
+                  keyframesCSS += `
+                    @keyframes slide-fade-loop-${index} { 
+                        0%, ${p1}% { opacity: 0; visibility: hidden; clip-path: inset(0 0 0% 0); transform-origin: center top; transform: rotateX(0deg) scaleY(1); animation-timing-function: ease-in-out; }
+                        ${p2}% { opacity: 1; visibility: visible; clip-path: inset(0 0 0% 0); transform-origin: center top; transform: rotateX(0deg) scaleY(1); animation-timing-function: linear; }
+                        ${p3}% { opacity: 1; visibility: visible; clip-path: inset(0 0 0% 0); transform-origin: center top; transform: rotateX(0deg) scaleY(1); animation-timing-function: ease-in-out; }
+                        ${p4}%, 100% { opacity: 0; visibility: hidden; clip-path: inset(0 0 100% 0); transform-origin: center top; transform: rotateX(-75deg) scaleY(0.6); }
+                    }
+                `;
+            }
+            else {
+                // Option 0: Default Blur & Scale Fade Loop
+                keyframesCSS += `
+                    @keyframes slide-fade-loop-${index} { 
+                        0%, ${p1}% { opacity: 0; mix-blend-mode: normal; visibility: hidden; transform: translate(100%, 0) scale(1.02); filter: blur(15px); animation-timing-function: ease-in-out;}
+                        ${p2}% { opacity: 1; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1); filter: blur(0px); animation-timing-function: linear; }
+                        ${p3}% { opacity: 1; mix-blend-mode: normal; visibility: visible; transform: translate(0, 0) scale(1); filter: blur(0px); animation-timing-function: ease-in-out;}
+                        ${p4}%, 100% { opacity: 0; mix-blend-mode: normal; visibility: hidden; transform: translate(0, 0) scale(1.02); filter: blur(15px); }
+                    }
+                `;
+            }
         });
 
         this.container.innerHTML = '';
