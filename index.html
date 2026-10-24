@@ -233,6 +233,14 @@
         window.location.replace(currentUrl.toString());
     }
 });
+
+window.addEventListener('beforeunload', () => {
+    // Turning off persistence ensures the next load starts from scratch
+    if (window.performance && window.performance.navigation.type === 1) {
+        // Soft-clear session history states if the user triggered a reload
+        window.name = ""; 
+    }
+});
     </script>
 
 </body>
