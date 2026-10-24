@@ -182,7 +182,6 @@ export class ImageAnimator {
             nextBtn.addEventListener('click', (e) => { e.stopPropagation(); this.next(); });
 
             controlRow.appendChild(prevBtn);
-            //controlRow.appendChild(note);
             controlRow.appendChild(pauseBtn);
             controlRow.appendChild(nextBtn);
 

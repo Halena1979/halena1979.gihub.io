@@ -221,6 +221,13 @@
                 new ImageDropdown('dropdown-anchor', 'main_frame', 'bg-image-element', pageMenuConfig, 'CHOOSE A PAGE...',  0, 0 );
             }
         });
+
+        window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        // event.persisted is true specifically when loaded from bfcache
+        window.location.reload();
+    }
+});
     </script>
 
 </body>
