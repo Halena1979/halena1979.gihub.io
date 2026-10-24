@@ -136,6 +136,11 @@ export class ImageAnimator {
             .nav-btn { background: none; border: none; color: #555555; font-family: Montserrat, sans-serif; font-size: clamp(14px, 2.2cqi, 20px); font-weight: bold; cursor: pointer; padding: 5px 12px; touch-action: manipulation; transition: color 0.15s ease, transform 0.1s ease; }
             .nav-btn:active { color: #000000; transform: scale(0.85); }
              .pause-btn { font-size: clamp(20px, 3.2cqi, 28px); display: flex; align-items: center; justify-content: center; }
+             .pause-glyph {
+                color: transparent !important;
+                background: transparent !important;
+                -webkit-text-fill-color: #555555 !important;
+            }
              #${this.container.id}.paused .pause-btn { text-decoration: line-through; text-decoration-thickness: 3px; color: #888888; }
 
         `;
@@ -169,6 +174,7 @@ export class ImageAnimator {
             pauseBtn.style.color = 'transparent';
             pauseBtn.style.background = 'transparent';
             pauseBtn.style.webkitTextFillColor = "#555555";
+            pauseBtn.innerHTML = `<span class="pause-glyph">⏸\uFE0E</span>`;
             pauseBtn.addEventListener('click', () => { this.container.classList.toggle('paused'); });
 
             const nextBtn = document.createElement('button');
