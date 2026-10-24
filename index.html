@@ -241,6 +241,26 @@ window.addEventListener('beforeunload', () => {
         window.name = ""; 
     }
 });
+
+window.addEventListener('DOMContentLoaded', () => {
+    // Detect if the user manually soft-refreshed or reloaded the tab
+    const navigationType = window.performance?.getEntriesByType("navigation")[0]?.type;
+    
+    if (navigationType === "reload") {
+        // 1. Force remove the injected animation style tag if it was left behind
+        const oldStyle = document.getElementById('animator-styles');
+        if (oldStyle) oldStyle.remove();
+
+        // 2. Clear any active classes sticking to your main animation canvas
+        const container = document.getElementById('slideshow'); // Use your container's ID
+        if (container) {
+            container.className = ''; 
+            container.innerHTML = '';
+        }
+        
+        console.log("Firefox memory heap states successfully wiped.");
+    }
+});
     </script>
 
 </body>
