@@ -165,7 +165,7 @@ export class ImageAnimator {
 
             const pauseBtn = document.createElement('button');
             pauseBtn.className = 'nav-btn pause-btn';
-            pauseBtn.textContent = '⏸';
+            pauseBtn.textContent = '⏸\uFE0E';
             pauseBtn.addEventListener('click', () => { this.container.classList.toggle('paused'); });
 
             const nextBtn = document.createElement('button');
