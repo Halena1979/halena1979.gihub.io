@@ -242,25 +242,27 @@ window.addEventListener('beforeunload', () => {
     }
 });
 
-window.addEventListener('DOMContentLoaded', () => {
-    // Detect if the user manually soft-refreshed or reloaded the tab
-    const navigationType = window.performance?.getEntriesByType("navigation")[0]?.type;
-    
-    if (navigationType === "reload") {
-        // 1. Force remove the injected animation style tag if it was left behind
-        const oldStyle = document.getElementById('animator-styles');
-        if (oldStyle) oldStyle.remove();
-
-        // 2. Clear any active classes sticking to your main animation canvas
-        const container = document.getElementById('main_frame'); // Use your container's ID
-        if (container) {
-            container.className = ''; 
-            container.innerHTML = '';
-        }
-        
-        console.log("Firefox memory heap states successfully wiped.");
-    }
-});
+ window.addEventListener('DOMContentLoaded', () => {
+            const navEntries = window.performance?.getEntriesByType("navigation");
+            const isReload = navEntries ? navEntries[0]?.type === "reload" : window.performance?.navigation?.type === 1;
+            
+            if (isReload) {
+                // Find your main iframe element
+                const iframe = document.getElementById('main_frame');
+                if (iframe) {
+                    // Force the browser engine to flush out its memory cache layout by resetting the source
+                    const currentSrc = iframe.src;
+                    iframe.src = 'about:blank'; // Break the memory anchor
+                    
+                    // Reassign the clean URL back with a dynamic time string to force a full server fetch
+                    setTimeout(() => {
+                        const cacheBuster = new URL(currentSrc, window.location.href);
+                        cacheBuster.searchParams.set('v', Date.now());
+                        iframe.src = cacheBuster.toString();
+                    }, 50);
+                }
+            }
+        });
     </script>
 
 </body>
