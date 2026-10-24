@@ -135,6 +135,9 @@ export class ImageAnimator {
             #${this.container.id}.paused * { animation-play-state: paused !important; }
             .nav-btn { background: none; border: none; color: #555555; font-family: Montserrat, sans-serif; font-size: clamp(14px, 2.2cqi, 20px); font-weight: bold; cursor: pointer; padding: 5px 12px; touch-action: manipulation; transition: color 0.15s ease, transform 0.1s ease; }
             .nav-btn:active { color: #000000; transform: scale(0.85); }
+             .pause-btn { font-size: clamp(20px, 3.2cqi, 28px); display: flex; align-items: center; justify-content: center; }
+             #${this.container.id}.paused .pause-btn { text-decoration: line-through; text-decoration-thickness: 3px; color: #888888; }
+
         `;
 
         this._images.forEach((src, index) => {
@@ -156,9 +159,14 @@ export class ImageAnimator {
             prevBtn.textContent = '◀';
             prevBtn.addEventListener('click', (e) => { e.stopPropagation(); this.prev(); });
 
-            const note = document.createElement('div');
-            note.textContent = "Click image to pause/resume animation";
-            note.style.cssText = 'font-size:clamp(11px, 1.8cqi, 16px); font-style:italic; font-weight:bold; color:#555555; font-family:Montserrat,sans-serif; text-align:center;';
+            //const note = document.createElement('div');
+            //note.textContent = "Click image to pause/resume animation";
+            //note.style.cssText = 'font-size:clamp(11px, 1.8cqi, 16px); font-style:italic; font-weight:bold; color:#555555; font-family:Montserrat,sans-serif; text-align:center;';
+
+            const pauseBtn = document.createElement('button');
+            pauseBtn.className = 'nav-btn pause-btn';
+            pauseBtn.textContent = '⏸';
+            pauseBtn.addEventListener('click', () => { this.container.classList.toggle('paused'); });
 
             const nextBtn = document.createElement('button');
             nextBtn.className = 'nav-btn';
@@ -166,7 +174,8 @@ export class ImageAnimator {
             nextBtn.addEventListener('click', (e) => { e.stopPropagation(); this.next(); });
 
             controlRow.appendChild(prevBtn);
-            controlRow.appendChild(note);
+            //controlRow.appendChild(note);
+            controlRow.appendChild(pauseBtn);
             controlRow.appendChild(nextBtn);
 
             const img = document.createElement('img');
