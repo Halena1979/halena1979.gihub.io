@@ -135,19 +135,24 @@ export class ImageAnimator {
             #${this.container.id}.paused * { animation-play-state: paused !important; }
             .nav-btn { background: none; border: none; color: #555555; font-family: Montserrat, sans-serif; font-size: clamp(14px, 2.2cqi, 20px); font-weight: bold; cursor: pointer; padding: 5px 12px; touch-action: manipulation; transition: color 0.15s ease, transform 0.1s ease; }
             .nav-btn:active { color: #000000; transform: scale(0.85); }
-             .pause-btn { font-size: clamp(20px, 3.2cqi, 28px); display: flex; align-items: center; justify-content: center; }
-             .pause-glyph {
-                color: #555555 !important;
-                background: transparent !important;
-                -webkit-text-fill-color: #555555 !important;
-                display: inline-block;
+
+            .pause-btn { font-size: clamp(18px, 2.8cqi, 24px); display: flex; align-items: center; justify-content: center; }
+            .pause-icon { color: #555555; transition: color 0.15s ease; }
+            
+            .pause-strike {
+                position: absolute;
+                left: -2px;
+                right: -2px;
+                height: 3px;
+                background-color: #888888;
+                transform: scaleX(0);
+                transition: transform 0.1s ease;
+                pointer-events: none;
             }
-             #${this.container.id}.paused .pause-glyph { 
-                text-decoration: line-through; 
-                text-decoration-thickness: 3px; 
-                color: #888888 !important;
-                -webkit-text-fill-color: #888888 !important; 
-            }
+            
+            /* When paused: darken the color palette and scale the strikethrough line to full width */
+            #${this.container.id}.paused .pause-icon { color: #888888; }
+            #${this.container.id}.paused .pause-strike { transform: scaleX(1); }
 
         `;
 
@@ -173,7 +178,15 @@ export class ImageAnimator {
 
             const pauseBtn = document.createElement('button');
             pauseBtn.className = 'nav-btn pause-btn';
-            pauseBtn.innerHTML = `<span class="pause-glyph">⏸\uFE0E</span>`;
+            //pauseBtn.innerHTML = `<span class="pause-glyph">⏸\uFE0E</span>`;
+            pauseBtn.innerHTML = `
+                <div class="pause-wrapper" style="position: relative; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="4 5 16 14" class="pause-icon" fill="currentColor" style="display: block; width: 0.9em; height: 0.9em;">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                    <div class="pause-strike"></div>
+                </div>
+            `;
             pauseBtn.addEventListener('click', () => { this.container.classList.toggle('paused'); });
 
             const nextBtn = document.createElement('button');

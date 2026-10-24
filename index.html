@@ -222,10 +222,15 @@
             }
         });
 
-        window.addEventListener('pageshow', (event) => {
+       window.addEventListener('pageshow', (event) => {
+    // Check if the page is being pulled straight from a frozen browser memory state
     if (event.persisted) {
-        // event.persisted is true specifically when loaded from bfcache
-        window.location.reload();
+        // Force-append a dynamic cache-busting timestamp parameter to break free from the bfcache
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('t', Date.now());
+        
+        // Push a hard navigation routing assignment instead of a standard reload() command
+        window.location.replace(currentUrl.toString());
     }
 });
     </script>
