@@ -8,7 +8,7 @@ class ImageDropdown {
      * @param {number} offsetX - Horizontal shift percentage from center
      * @param {number} offsetY - Vertical shift percentage from center
      */
-    constructor(wrapperId, iframeId, bgImageId, options, defaultText = "Choose a Page...", offsetX = 0, offsetY = 0) {
+    constructor(wrapperId, iframeId, bgImageId, options, defaultText = "CHOOSE A PAGE...", offsetX = 0, offsetY = 0) {
         this.container = document.getElementById(wrapperId);
         this.iframeId = iframeId; 
         this.bgImageId = bgImageId; // 👈 Storing your new background image selector parameter
@@ -42,7 +42,7 @@ class ImageDropdown {
         textOverlay.style.width = '100%'; 
         textOverlay.style.fontFamily = "Montserrat, sans-serif";
         textOverlay.style.fontSize = 'clamp(10px, 5.5cqi, 20px)'; 
-        textOverlay.style.fontWeight = 'bold';
+        textOverlay.style.fontWeight = 'normal';
         textOverlay.style.color = 'white'; 
         textOverlay.style.textAlign = 'center';
         textOverlay.style.pointerEvents = 'none'; 
