@@ -170,10 +170,10 @@ export class ImageAnimator {
 
             const pauseBtn = document.createElement('button');
             pauseBtn.className = 'nav-btn pause-btn';
-            pauseBtn.textContent = '⏸\uFE0E';
-            pauseBtn.style.color = 'transparent';
-            pauseBtn.style.background = 'transparent';
-            pauseBtn.style.webkitTextFillColor = "#555555";
+           // /pauseBtn.textContent = '⏸\uFE0E';
+           /// pauseBtn.style.color = 'transparent';
+           // /pauseBtn.style.background = 'transparent';
+           /// pauseBtn.style.webkitTextFillColor = "#555555";
             pauseBtn.innerHTML = `<span class="pause-glyph">⏸\uFE0E</span>`;
             pauseBtn.addEventListener('click', () => { this.container.classList.toggle('paused'); });
 
