@@ -129,7 +129,7 @@ export class ImageAnimator {
         });
 
         this.container.innerHTML = '';
-        this.container.style.cssText = 'position:relative; overflow:hidden; width:100%; height:100%; box-sizing:border-box;';
+    //    this.container.style.cssText = 'position:relative; overflow:hidden; width:100%; height:100%; box-sizing:border-box;';
         
         let styleRules = keyframesCSS + `
             #${this.container.id}.paused * { animation-play-state: paused !important; }

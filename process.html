@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Halena's Process</title>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden; 
+        background-color: #D1D1D1;
+        
+        /* Centering the entire frame context */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .background_img {
+        /* FIX 1: Mimic 'background-size: contain' by making the wrapper container 
+           automatically expand to full viewport constraints but scale inside a rigid box */
+        width: 100%;
+        height: 100%;
+        max-width: calc(100vh * (635 / 808));
+        max-height: calc(100vw * (808 / 635));
+        aspect-ratio: 635 / 808;
+
+        background-image: url("process_bg.png");
+        background-size: 100% 100%; /* Image now tracks container edges with pixel precision */
+        background-repeat: no-repeat;
+        background-position: center center;
+        position: relative; 
+    }
+
+    #slideshow {  
+        background-color: #FFFFFF; 
+        aspect-ratio: 635 / 808;
+
+        /* FIX 2: Since the parent container now tracks the visible image pixels precisely,
+           percentages here correspond exactly to the artwork space! */
+        width: 84.5%;
+        max-height: 76.4%;
+
+        /* ANCHOR & ASYMMETRIC OFFSETS */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        
+        /* Your exact translation values stay perfectly locked to your artwork grid coordinate */
+        transform: translate(-49.1%, -43.6%);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+</head>
+<body>
+    <div class="background_img">
+        <div id="slideshow"></div>
+    </div>
+
+    <script type="module" >
+        import {ImageAnimator} from './image_animator.js';
+        const client = new ImageAnimator('slideshow', 2, 3, 2, false,2);
+	    //alert("script is running")
+	    client.images = ['./ink_drawings/Background_Experiment.png', 
+                        './ink_drawings/Backyard.png' , 
+                        './ink_drawings/Catasaurus.png', 
+                        './ink_drawings/Cthulhu.png', 
+                        './ink_drawings/Dream Eater.png', 
+                        './ink_drawings/Family.png', 
+                        './ink_drawings/Ferndale.png',
+                        './ink_drawings/Flower.png',
+                        './ink_drawings/Hilton_Road_Cafe.png',
+                        './ink_drawings/Iron_Bell_in_Field.png',
+                        './ink_drawings/Liberty.png', 
+                        './ink_drawings/Morning Coffee.png', 
+                        './ink_drawings/Oskar.png',
+                        './ink_drawings/Samurai.png',
+                        './ink_drawings/Sunday_Chair.png',
+                        './ink_drawings/Superhero.png']
+    </script>
+</body>
+</html>
