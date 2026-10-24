@@ -42,6 +42,7 @@ class ImageDropdown {
         textOverlay.style.width = '100%'; 
         textOverlay.style.fontFamily = "Montserrat, sans-serif";
         textOverlay.style.fontSize = 'clamp(10px, 5.5cqi, 20px)'; 
+        textOverlay.style.letterSpacing = "0.06em";
         textOverlay.style.fontWeight = 'normal';
         textOverlay.style.color = 'white'; 
         textOverlay.style.textAlign = 'center';
