@@ -115,6 +115,28 @@ export class ImageAnimator {
                     }
                 `;
             }
+            else if (this._transition_type === 3) {
+                // Option 3: Fade In Reveal ➔ Hold ➔ fade out
+                  keyframesCSS += `
+                    @keyframes slide-fade-loop-${index} { 
+                        0%, ${p1}% { opacity: 0; visibility: hidden;  animation-timing-function: ease-in-out; }
+                        ${p2}% { opacity: 1; visibility: visible;  animation-timing-function: linear; }
+                        ${p3}% { opacity: 1; visibility: visible;  animation-timing-function: ease-in-out; }
+                        ${p4}%, 100% { opacity: 0; visibility: hidden;  }
+                    }
+                `;
+            }
+            else if (this._transition_type === 4) {
+                // Option 4: Fade In Reveal ➔ Hold ➔ dont fade out
+                  keyframesCSS += `
+                    @keyframes slide-fade-loop-${index} { 
+                        0%, ${p1}% { opacity: 0; visibility: hidden;  animation-timing-function: ease-in-out; }
+                        ${p2}% { opacity: 1; visibility: visible;  animation-timing-function: linear; }
+                        ${p3}% { opacity: 1; visibility: visible;  animation-timing-function: ease-in-out; }
+                        ${p4}%, 100% { opacity: 1; visibility: visible;  }
+                    }
+                `;
+            }
             else {
                 // Option 0: Default Blur & Scale Fade Loop
                 keyframesCSS += `
