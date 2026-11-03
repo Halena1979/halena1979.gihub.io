@@ -22,9 +22,100 @@
 </style>
 </head>
 <body>
-    <div class="background_img">
-        <a href = "mailto:halenafisher@gmail.com">halenafisher@gmail.com</a>
+    <div>
+        <h2>Send Me A Message</h2>
+        
+        <form id="contact-form" method="POST">
+            <!-- Spam Protection: HoneyPot Field -->
+            <input type="text" name="_honey" style="display:none">
+
+            <input type="hidden" name="_captcha" value="false"> 
+            <input type="hidden" name="_subject" value="OriginalsByHalena - New Note">
+
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required placeholder="John Doe">
+            </div>
+
+            <div>
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required placeholder="you@example.com">
+            </div>
+
+            <div>
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="5" required placeholder="Type your message here..."></textarea>
+            </div>
+
+            <button type="submit" id="submit-btn">Send Message</button>
+        </form>
+
+        <p id="form-status" style="display:none; color: green; font-weight: bold; margin-top: 15px;">
+            Thank you! Your message has been sent successfully.
+        </p>
+
+        <br>
+        <a href="mailto:halenafisher@gmail.com">halenafisher@gmail.com</a>
     </div>
 
+    <script>
+        const myEmail = "halenafisher@gmail.com";
+
+        // 🛠️ TOGGLE THIS VARIABLE:
+        // Set to true for your very first submission to get the email activation link.
+        // Change to false right after activating, then push your code back to GitHub.
+        const firstTimeActivation = true; 
+
+        const form = document.getElementById('contact-form');
+        const button = document.getElementById('submit-btn');
+        const status = document.getElementById('form-status');
+
+        // Configure the URL route globally based on your toggle
+        if (firstTimeActivation) {
+            form.action = "https://formsubmit.co" + myEmail;
+        } else {
+            form.action = "https://formsubmit.co/ajax/" + myEmail;
+        }
+
+        form.addEventListener('submit', function(event) {
+            // If we are in activation mode, do not run the AJAX intercept script.
+            // Let the browser redirect normally so FormSubmit can send you the confirmation email.
+            if (firstTimeActivation) {
+                return; 
+            }
+
+            // --- PRODUCTION SILENT SUBMISSION (Runs when firstTimeActivation is false) ---
+            event.preventDefault(); 
+            
+            button.textContent = "Sending...";
+            button.disabled = true;
+
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    status.style.display = "block"; 
+                    form.reset(); 
+                } else {
+                    alert("Oops! There was a problem submitting your form");
+                }
+                button.textContent = "Send Message";
+                button.disabled = false;
+            })
+            .catch(error => {
+                alert("Oops! There was a network error connection problem.");
+                button.textContent = "Send Message";
+                button.disabled = false;
+            });
+        });
+    </script>
+    </div>
 </body>
 </html>
