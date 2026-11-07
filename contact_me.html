@@ -62,13 +62,15 @@
             transition: all 0.2s ease-in-out;
         }
 
-    #message_header {width:100%;}
+    #message_header {font-size: clamp(14px, 2.2cqi, 24px); }
 
 </style>
 </head>
 <body>
     <div class="contact-container">
-        <img id="message_header" src="./message_header.png"/>
+        <div id="message_header" >
+        Drop me a message below with your thoughts,<br>
+        and let's make something beautiful!<br><br></div>
         
         <form id="contact-form" method="POST">
             <!-- Spam Protection: HoneyPot Field -->
