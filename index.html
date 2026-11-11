@@ -53,17 +53,15 @@
             /* Thinner, clean grey border edge buffer layout zone */
             padding: 8px; 
             box-sizing: border-box; 
+            container-type: size;
         }
 
         /* 2. THE CANVAS: Dynamically maps the dimensions of whichever image is loading */
         .artwork-canvas {
             position: relative; 
-            display: block;
-            width: 100%;
-            height: 100%;
-            max-width: 100%;
-            max-height: 100%;
-            
+            width: min(100cqw, calc(100cqh * (1080 / 1920)));
+            height: min(100cqh, calc(100cqw * (1920 / 1080)));
+        
             /* Default narrow aspect ratio logic locks the absolute bounds mapping safely */
             aspect-ratio: 1080 / 1920;
         }
@@ -75,7 +73,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: fill; /* Fills our aspect container box perfectly with zero trailing edges */
+            object-fit: contain; /* Fills our aspect container box perfectly with zero trailing edges */
             z-index: 1;
         }
 
@@ -84,6 +82,8 @@
             .artwork-canvas {
                 /* Flip the bounding aspect frame to match the desktop widescreen dimensions */
                 aspect-ratio: 1920 / 1080;
+                 width: min(100cqw, calc(100cqh * (1920 / 1080)));
+                height: min(100cqh, calc(100cqw * (1080 / 1920)));
             }
         }
 
@@ -96,14 +96,14 @@
         #dropdown-anchor {
             position: absolute;
             z-index: 100; /* Keeps dropdown layers positioned safely ABOVE the background image */  
-            transform: translate(-50%, -50%);
+            transform: translateY(-50%);
             
             /* Pin the center point directly over the mobile black menu rectangle */
             --base-top: 3.65%;
-            --base-left: 14%;
+            --base-left: 5%;
             top: var(--base-top);
             left: var(--base-left);
-            width: 26%;  
+            width: 35%;  
             height: 5%; 
             
             container-type: inline-size;
@@ -136,10 +136,9 @@
         /* 2. MOBILE LANDSCAPE OVERRIDE (Phones rotated sideways only) */
         @media screen and (orientation: landscape) and (max-width: 900px) {
             #dropdown-anchor {
-                background-image: none !important; 
-                left: 10.5%;  /* Center point over the landscape black menu box */
+                left: 2.0%;  /* Center point over the landscape black menu box */
                 top: 8.7%;   
-                width: 32%;   
+                width: 35%;   
                 height: 6%; 
             }
 
@@ -154,9 +153,9 @@
         @media screen and (min-width: 901px) {
             #dropdown-anchor {
                 background-image: none !important; 
-                left: 7.25%;  /* Center point over the widescreen desktop menu box */
+                left: 2%;  /* Center point over the widescreen desktop menu box */
                 top: 9.9%;    
-                width: 30%;   
+                width: 35%;   
                 height: 6%; 
             }
 
@@ -213,8 +212,8 @@
             if (!imgElement) return;
 
             // Check viewport metrics directly against our 901px CSS shift break point exactly
-            const isWidescreen = window.innerWidth >= 901 || window.matchMedia("(orientation: landscape)").matches;
-            const targetSrc = isWidescreen ? "main_background_wide.png" : "main_background_narrow.png";
+            const isWide = window.matchMedia('(min-width: 901px), screen and (orientation: landscape)').matches;
+            const targetSrc = isWide ? "main_background_wide.png" : "main_background_narrow.png";
 
             // Swap source file path only when necessary to save browser performance loops
             if (!imgElement.src.includes(targetSrc)) {

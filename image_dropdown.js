@@ -22,7 +22,7 @@ class ImageDropdown {
     init() {
         if (!this.container) return;
 
-        this.container.style.position = 'relative'; 
+        //this.container.style.position = 'relative'; 
         this.container.style.containerType = 'inline-size';
         
         // FIX: Look globally for the actual background image using your new ID input parameter
@@ -30,7 +30,7 @@ class ImageDropdown {
         if (existingImg) {
             existingImg.style.cursor = 'pointer';
             existingImg.style.transition = 'transform 0.2s ease';
-            existingImg.addEventListener('mouseenter', () => existingImg.style.transform = 'scale(1.01)');
+          //  existingImg.addEventListener('mouseenter', () => existingImg.style.transform = 'scale(1.01)');
             existingImg.addEventListener('mouseleave', () => existingImg.style.transform = 'scale(1.00)');
         }
 
@@ -45,24 +45,24 @@ class ImageDropdown {
         textOverlay.style.letterSpacing = "0.06em";
         textOverlay.style.fontWeight = 'normal';
         textOverlay.style.color = 'white'; 
-        textOverlay.style.textAlign = 'center';
+        textOverlay.style.textAlign = 'left';
         textOverlay.style.pointerEvents = 'none'; 
 
         const finalTop = 50 + this.offsetY;
-        const finalLeft = 50 + this.offsetX;
+        const finalLeft = 0 + this.offsetX;
         
         textOverlay.style.top = `${finalTop}%`;
         textOverlay.style.left = `${finalLeft}%`;
-        textOverlay.style.transform = 'translate(-50%, -50%)'; 
+        textOverlay.style.transform = 'translateY(-50%)'; 
 
         this.container.appendChild(textOverlay);
 
         // Create the Invisible Select Overlay Click Area
         const select = document.createElement('select');
         select.style.position = 'absolute';
-        select.style.top = `${finalTop}%`;
-        select.style.left = `${finalLeft}%`;
-        select.style.transform = 'translate(-50%, -50%)';
+        select.style.top = `0`;
+        select.style.left = `0`;
+        select.style.transform = 'none';
         select.style.width = '100%';  
         select.style.height = '100%';   
         select.style.opacity = '0'; 
